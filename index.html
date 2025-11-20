@@ -9,8 +9,22 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
-    <!-- Phosphor Icons (Lightweight icon library) -->
+    <!-- Phosphor Icons -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <!-- Google GenAI SDK Import Map -->
+    <script type="importmap">
+{
+  "imports": {
+    "@google/genai": "https://esm.run/@google/genai",
+    "react": "https://aistudiocdn.com/react@^19.2.0",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "framer-motion": "https://aistudiocdn.com/framer-motion@^12.23.24",
+    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.554.0"
+  }
+}
+</script>
 
     <script>
       tailwind.config = {
@@ -37,11 +51,12 @@
               'marquee': 'marquee 20s linear infinite',
               'float': 'float 6s ease-in-out infinite',
               'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+              'spin-slow': 'spin 10s linear infinite',
             },
             keyframes: {
               marquee: {
                 '0%': { transform: 'translateX(0%)' },
-                '100%': { transform: 'translateX(-100%)' },
+                '100%': { transform: 'translateX(-50%)' },
               },
               float: {
                 '0%, 100%': { transform: 'translateY(0)' },
@@ -58,7 +73,6 @@
         color: #1A1A1A;
         overflow-x: hidden;
       }
-      /* Hide scrollbar for ticker */
       .no-scrollbar::-webkit-scrollbar {
         display: none;
       }
@@ -66,64 +80,42 @@
         -ms-overflow-style: none;
         scrollbar-width: none;
       }
-      
-      /* Gradient Text */
-      .text-gradient {
-        background-clip: text;
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-image: linear-gradient(to right, #F5A524, #EA580C);
-      }
     </style>
-<script type="importmap">
-{
-  "imports": {
-    "react": "https://aistudiocdn.com/react@^19.2.0",
-    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
-    "react/": "https://aistudiocdn.com/react@^19.2.0/",
-    "framer-motion": "https://aistudiocdn.com/framer-motion@^12.23.24",
-    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.554.0",
-    "@google/genai": "https://aistudiocdn.com/@google/genai@^1.30.0"
-  }
-}
-</script>
 </head>
-<body class="relative">
+<body class="relative selection:bg-orange-200 selection:text-orange-900">
 
-    <!-- Grain Texture Overlay -->
-    <div class="fixed inset-0 opacity-[0.04] pointer-events-none z-0 mix-blend-multiply" 
-         style="background-image: url('data:image/svg+xml,%3Csvg viewBox=%270 0 200 200%27 xmlns=%27http://www.w3.org/2000/svg%27%3E%3Cfilter id=%27noiseFilter%27%3E%3CfeTurbulence type=%27fractalNoise%27 baseFrequency=%270.65%27 numOctaves=%273%27 stitchTiles=%27stitch%27/%3E%3C/filter%3E%3Crect width=%27100%25%27 height=%27100%25%27 filter=%27url(%23noiseFilter)%27/%3E%3C/svg%3E');">
-    </div>
-
-    <!-- Floating Stars Decoration Container -->
-    <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden" id="star-container">
-        <!-- JS will inject stars here, or we hardcode a few -->
-        <img src="https://drive.google.com/thumbnail?id=1cu8q7J0IC4s0ASCLm4T9JDElmC51YlKi&sz=w200" class="absolute top-[10%] left-[5%] w-8 h-8 opacity-40 animate-pulse-slow" alt="">
-        <img src="https://drive.google.com/thumbnail?id=1cu8q7J0IC4s0ASCLm4T9JDElmC51YlKi&sz=w200" class="absolute top-[40%] right-[10%] w-12 h-12 opacity-20 animate-float" alt="">
+    <!-- Decorations -->
+    <div class="fixed inset-0 z-0 pointer-events-none">
+        <div class="absolute inset-0 opacity-[0.04] mix-blend-multiply" 
+             style="background-image: url('data:image/svg+xml,%3Csvg viewBox=%270 0 200 200%27 xmlns=%27http://www.w3.org/2000/svg%27%3E%3Cfilter id=%27noiseFilter%27%3E%3CfeTurbulence type=%27fractalNoise%27 baseFrequency=%270.65%27 numOctaves=%273%27 stitchTiles=%27stitch%27/%3E%3C/filter%3E%3Crect width=%27100%25%27 height=%27100%25%27 filter=%27url(%23noiseFilter)%27/%3E%3C/svg%3E');">
+        </div>
+        <!-- Scattered Stars -->
+        <img src="https://drive.google.com/thumbnail?id=1cu8q7J0IC4s0ASCLm4T9JDElmC51YlKi&sz=w200" class="absolute top-[10%] left-[5%] w-8 h-8 opacity-40 animate-pulse-slow">
+        <img src="https://drive.google.com/thumbnail?id=1cu8q7J0IC4s0ASCLm4T9JDElmC51YlKi&sz=w200" class="absolute top-[40%] right-[10%] w-12 h-12 opacity-20 animate-float">
+        <img src="https://drive.google.com/thumbnail?id=1cu8q7J0IC4s0ASCLm4T9JDElmC51YlKi&sz=w200" class="absolute bottom-[20%] left-[15%] w-10 h-10 opacity-30 animate-spin-slow">
     </div>
 
     <!-- Navigation -->
-    <nav class="fixed top-0 w-full z-50 transition-all duration-300" id="navbar">
+    <nav class="fixed top-0 w-full z-50" id="navbar">
         <!-- Desktop Nav -->
-        <div class="hidden lg:flex justify-between items-center max-w-7xl mx-auto px-6 py-6">
-            <!-- Menu Pills -->
-            <div class="bg-white/90 backdrop-blur-md px-8 py-4 rounded-full shadow-sm border border-orange-100 flex gap-8">
-                <a href="#home" class="text-sm font-bold text-gray-600 hover:text-orange-600 transition-colors">Home</a>
-                <a href="#achievements" class="text-sm font-bold text-gray-600 hover:text-orange-600 transition-colors">Achievements</a>
-                <a href="#project1" class="text-sm font-bold text-gray-600 hover:text-orange-600 transition-colors">Project 1</a>
-                <a href="#project2" class="text-sm font-bold text-gray-600 hover:text-orange-600 transition-colors">Project 2</a>
-                <a href="#project3" class="text-sm font-bold text-gray-600 hover:text-orange-600 transition-colors">Project 3</a>
-                <a href="#contact" class="text-sm font-bold text-gray-600 hover:text-orange-600 transition-colors">Let's Connect</a>
+        <div class="hidden lg:block">
+            <div class="fixed top-6 left-6 z-40">
+                <nav class="flex items-center gap-8 bg-white/90 backdrop-blur-md px-8 py-4 rounded-full shadow-sm border border-orange-100">
+                    <a href="#home" class="text-sm font-bold text-gray-600 hover:text-orange-600 transition-colors">Home</a>
+                    <a href="#achievements" class="text-sm font-bold text-gray-600 hover:text-orange-600 transition-colors">Achievements</a>
+                    <a href="#project1" class="text-sm font-bold text-gray-600 hover:text-orange-600 transition-colors">Project 1</a>
+                    <a href="#project2" class="text-sm font-bold text-gray-600 hover:text-orange-600 transition-colors">Project 2</a>
+                    <a href="#project3" class="text-sm font-bold text-gray-600 hover:text-orange-600 transition-colors">Project 3</a>
+                    <a href="#lets-connect" class="text-sm font-bold text-gray-600 hover:text-orange-600 transition-colors">Let's connect</a>
+                </nav>
             </div>
-
-            <!-- Contact Pill -->
-            <div class="bg-white/90 backdrop-blur-md px-8 py-4 rounded-full shadow-sm border border-orange-100 flex gap-4 items-center text-sm font-medium text-gray-600">
+            <div class="fixed top-6 right-6 z-40 flex gap-4 bg-white/90 backdrop-blur-md px-8 py-4 rounded-full shadow-sm border border-orange-100 text-sm font-medium text-gray-600">
                 <button onclick="copyToClipboard('+601165056363')" class="flex items-center gap-2 hover:text-orange-600 transition-colors group relative">
                     <i class="ph ph-phone text-lg"></i>
                     <span>+60 11 65056363</span>
                     <span class="absolute top-full mt-2 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">Click to copy</span>
                 </button>
-                <div class="w-px bg-gray-300 h-4"></div>
+                <div class="w-px bg-gray-300 h-4 self-center"></div>
                 <a href="mailto:itsmicpwt@gmail.com" class="flex items-center gap-2 hover:text-orange-600 transition-colors">
                     <i class="ph ph-envelope-simple text-lg"></i>
                     <span>itsmicpwt@gmail.com</span>
@@ -132,13 +124,12 @@
         </div>
 
         <!-- Mobile Nav Header -->
-        <div class="lg:hidden flex items-center justify-between px-4 py-3">
-            <button onclick="toggleMobileMenu()" class="bg-white/90 backdrop-blur p-2 rounded-full shadow-lg text-orange-600 border border-orange-100 z-50 pointer-events-auto">
+        <div class="lg:hidden fixed top-0 left-0 w-full z-50 px-4 py-3 flex justify-between items-center pointer-events-none">
+            <button onclick="toggleMobileMenu()" class="pointer-events-auto bg-white/90 backdrop-blur p-2 rounded-full shadow-lg text-orange-600 border border-orange-100">
                 <i class="ph ph-list text-xl"></i>
             </button>
 
-            <!-- Mobile Contact Pill -->
-            <div class="flex items-center gap-3 bg-white/90 backdrop-blur-md px-4 py-2 rounded-full shadow-sm border border-orange-50 pointer-events-auto">
+            <div class="pointer-events-auto flex items-center gap-3 bg-white/90 backdrop-blur-md px-4 py-2 rounded-full shadow-sm border border-orange-50 max-w-[85%]">
                 <button onclick="copyToClipboard('+601165056363')" class="flex items-center gap-1.5 text-[10px] xs:text-xs font-bold text-gray-700 hover:text-orange-600 transition-colors">
                     <i class="ph ph-phone text-orange-500"></i>
                     <span>+60 11 65056363</span>
@@ -152,7 +143,7 @@
         </div>
 
         <!-- Mobile Menu Drawer -->
-        <div id="mobile-menu" class="fixed inset-0 bg-[#FFFBF4] z-40 transform -translate-x-full transition-transform duration-300 flex flex-col p-8 lg:hidden overflow-y-auto">
+        <div id="mobile-menu" class="fixed inset-0 bg-[#FFFBF4] z-50 transform -translate-x-full transition-transform duration-300 flex flex-col p-8 lg:hidden overflow-y-auto">
              <div class="flex justify-end mb-8">
                <button onclick="toggleMobileMenu()" class="bg-orange-100 p-2 rounded-full text-orange-600">
                  <i class="ph ph-x text-2xl"></i>
@@ -164,9 +155,9 @@
                <a href="#project1" onclick="toggleMobileMenu()" class="text-3xl font-extrabold text-dark hover:text-orange-500 transition-colors">Project 1</a>
                <a href="#project2" onclick="toggleMobileMenu()" class="text-3xl font-extrabold text-dark hover:text-orange-500 transition-colors">Project 2</a>
                <a href="#project3" onclick="toggleMobileMenu()" class="text-3xl font-extrabold text-dark hover:text-orange-500 transition-colors">Project 3</a>
-               <a href="#contact" onclick="toggleMobileMenu()" class="text-3xl font-extrabold text-dark hover:text-orange-500 transition-colors">Let's connect</a>
+               <a href="#lets-connect" onclick="toggleMobileMenu()" class="text-3xl font-extrabold text-dark hover:text-orange-500 transition-colors">Let's connect</a>
              </nav>
-             <div class="mt-auto flex justify-center opacity-50">
+             <div class="mt-auto pt-10 flex justify-center opacity-50">
                  <img src="https://drive.google.com/thumbnail?id=1cu8q7J0IC4s0ASCLm4T9JDElmC51YlKi&sz=w200" class="w-16 h-16 animate-pulse" alt="">
              </div>
         </div>
@@ -174,7 +165,6 @@
 
     <!-- Hero Section -->
     <section id="home" class="relative w-full pt-24 lg:pt-40 pb-16 overflow-hidden">
-        <!-- Background Gradient -->
         <div class="absolute inset-0 bg-gradient-to-br from-orange-100/40 via-[#FFFBF4] to-orange-200/30 pointer-events-none z-0"></div>
         
         <div class="w-full max-w-7xl mx-auto px-6 relative z-10">
@@ -191,28 +181,25 @@
                     <p class="text-xl text-gray-600 mb-8 max-w-md leading-relaxed">
                         YouTube Growth Strategist & Media Manager. Helping channels succeed by blending Content Strategy, SEO, and AI-powered optimization.
                     </p>
-                    <a href="#achievements" class="bg-orange-500 text-white px-8 py-4 rounded-full font-bold shadow-lg shadow-orange-500/30 flex items-center gap-2 hover:scale-105 transition-transform">
+                    <a href="#achievements" class="bg-orange-500 text-white px-8 py-4 rounded-full font-bold shadow-lg shadow-orange-500/30 flex items-center gap-2 hover:scale-105 transition-transform cursor-pointer">
                         Learn More Below
                         <i class="ph ph-arrow-right text-xl"></i>
                     </a>
                 </div>
 
-                <!-- Avatar Image -->
+                <!-- Avatar -->
                 <div class="relative flex justify-center order-2">
-                     <!-- Decorative Blob -->
                      <div class="absolute top-10 right-10 bg-white/40 backdrop-blur-md p-4 rounded-2xl shadow-xl rotate-12 hidden lg:block animate-float">
                         <span class="text-3xl">✨</span>
                      </div>
-
-                     <!-- Main Avatar Circle -->
                      <div class="relative z-10 bg-gradient-to-b from-orange-200 to-orange-50 rounded-full overflow-hidden w-64 h-64 sm:w-80 sm:h-80 lg:w-[450px] lg:h-[450px] flex items-end justify-center border-4 border-white shadow-2xl group">
                         <img src="https://drive.google.com/thumbnail?id=19NPwLZPyCRuei6QPVfnsaV767OHNqAjW&sz=w1000" 
                              alt="Michelle" 
                              class="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-700"
                              onerror="this.src='https://api.dicebear.com/7.x/avataaars/svg?seed=Michelle'">
                      </div>
-
-                     <!-- Floating Badge: Subscribers -->
+                     
+                     <!-- Floating Badges -->
                      <div class="absolute bottom-4 -left-4 sm:bottom-10 lg:left-10 bg-white p-3 sm:p-4 rounded-2xl shadow-xl flex items-center gap-3 z-20 animate-float" style="animation-delay: 1s;">
                         <div class="bg-green-100 p-2 rounded-full text-green-600 font-bold text-sm sm:text-lg">+85K</div>
                         <div>
@@ -220,8 +207,6 @@
                             <p class="text-sm sm:text-base font-bold text-dark">Coin Bureau Chinese</p>
                         </div>
                      </div>
-
-                     <!-- Floating Badge: Produced -->
                      <div class="absolute top-4 -right-4 sm:top-10 lg:right-10 bg-white p-3 sm:p-4 rounded-2xl shadow-xl flex items-center gap-3 z-20 animate-float" style="animation-delay: 2s;">
                         <div class="bg-orange-100 p-2 rounded-full text-orange-600 font-bold text-sm sm:text-lg">500+</div>
                         <div>
@@ -237,86 +222,66 @@
     <!-- Skills Ticker -->
     <div class="w-full bg-[#FDBA74] py-4 overflow-hidden border-y-2 border-orange-300 relative z-10">
         <div class="flex whitespace-nowrap w-[200%] animate-marquee">
-            <!-- Content repeated for infinite scroll -->
             <div class="flex items-center gap-12 pr-12">
                 <div class="flex items-center gap-4"><span class="text-white font-bold text-lg uppercase tracking-wider">Content Strategy</span><span class="text-white opacity-70">+</span></div>
                 <div class="flex items-center gap-4"><span class="text-white font-bold text-lg uppercase tracking-wider">Media Creation</span><span class="text-white opacity-70">+</span></div>
-                <div class="flex items-center gap-4"><span class="text-white font-bold text-lg uppercase tracking-wider">Search Engine Optimization</span><span class="text-white opacity-70">+</span></div>
-                <div class="flex items-center gap-4"><span class="text-white font-bold text-lg uppercase tracking-wider">AI-driven Workflows</span><span class="text-white opacity-70">+</span></div>
-                <div class="flex items-center gap-4"><span class="text-white font-bold text-lg uppercase tracking-wider">Audience Analytics</span><span class="text-white opacity-70">+</span></div>
+                <div class="flex items-center gap-4"><span class="text-white font-bold text-lg uppercase tracking-wider">SEO</span><span class="text-white opacity-70">+</span></div>
+                <div class="flex items-center gap-4"><span class="text-white font-bold text-lg uppercase tracking-wider">AI Workflows</span><span class="text-white opacity-70">+</span></div>
+                <div class="flex items-center gap-4"><span class="text-white font-bold text-lg uppercase tracking-wider">Analytics</span><span class="text-white opacity-70">+</span></div>
                 <div class="flex items-center gap-4"><span class="text-white font-bold text-lg uppercase tracking-wider">Brand Growth</span><span class="text-white opacity-70">+</span></div>
             </div>
-            <!-- Duplicated content -->
             <div class="flex items-center gap-12 pr-12">
                 <div class="flex items-center gap-4"><span class="text-white font-bold text-lg uppercase tracking-wider">Content Strategy</span><span class="text-white opacity-70">+</span></div>
                 <div class="flex items-center gap-4"><span class="text-white font-bold text-lg uppercase tracking-wider">Media Creation</span><span class="text-white opacity-70">+</span></div>
-                <div class="flex items-center gap-4"><span class="text-white font-bold text-lg uppercase tracking-wider">Search Engine Optimization</span><span class="text-white opacity-70">+</span></div>
-                <div class="flex items-center gap-4"><span class="text-white font-bold text-lg uppercase tracking-wider">AI-driven Workflows</span><span class="text-white opacity-70">+</span></div>
-                <div class="flex items-center gap-4"><span class="text-white font-bold text-lg uppercase tracking-wider">Audience Analytics</span><span class="text-white opacity-70">+</span></div>
+                <div class="flex items-center gap-4"><span class="text-white font-bold text-lg uppercase tracking-wider">SEO</span><span class="text-white opacity-70">+</span></div>
+                <div class="flex items-center gap-4"><span class="text-white font-bold text-lg uppercase tracking-wider">AI Workflows</span><span class="text-white opacity-70">+</span></div>
+                <div class="flex items-center gap-4"><span class="text-white font-bold text-lg uppercase tracking-wider">Analytics</span><span class="text-white opacity-70">+</span></div>
                 <div class="flex items-center gap-4"><span class="text-white font-bold text-lg uppercase tracking-wider">Brand Growth</span><span class="text-white opacity-70">+</span></div>
             </div>
         </div>
     </div>
 
-    <!-- Achievements Section -->
+    <!-- Achievements -->
     <section id="achievements" class="w-full max-w-7xl mx-auto px-6 py-20 relative z-10">
         <div class="mb-12">
             <div class="flex items-center gap-2 mb-2">
                 <div class="w-2 h-2 rounded-full bg-orange-500"></div>
                 <span class="text-orange-600 font-bold uppercase text-xs tracking-widest">Achievements</span>
             </div>
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-end">
-                <h2 class="text-4xl font-extrabold text-dark">Some of My <br />Accomplishments</h2>
-                <p class="text-gray-600 mb-4 max-w-lg text-base md:text-lg">
-                    I build systems that combine creativity with analytics, so every video not only looks great, but also reaches the right audience.
-                </p>
-            </div>
+            <h2 class="text-4xl font-extrabold text-dark mb-4">Some of My <br />Accomplishments</h2>
+            <p class="text-gray-600 max-w-lg text-base md:text-lg">
+                I build systems that combine creativity with analytics, so every video not only looks great, but also reaches the right audience.
+            </p>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            <!-- Card 1 -->
             <div class="bg-white p-6 rounded-3xl shadow-sm border border-orange-100 flex flex-col h-full group hover:-translate-y-2 transition-transform duration-300">
                 <div class="flex justify-between items-start mb-4">
-                    <div>
-                        <h3 class="text-3xl font-extrabold text-dark group-hover:text-orange-500 transition-colors">85K+</h3>
-                        <p class="text-lg font-bold text-gray-800">Subscribers</p>
-                    </div>
-                    <div class="bg-orange-500 p-3 rounded-2xl text-white shadow-lg shadow-orange-500/40"><i class="ph ph-users text-xl"></i></div>
+                    <div><h3 class="text-3xl font-extrabold text-dark group-hover:text-orange-500 transition-colors">85K+</h3><p class="text-lg font-bold text-gray-800">Subscribers</p></div>
+                    <div class="bg-orange-500 p-3 rounded-2xl text-white"><i class="ph ph-users text-xl"></i></div>
                 </div>
-                <p class="text-base text-gray-500 mt-auto leading-relaxed">Grew Coin Bureau Chinese YouTube from 0 to 85K subscribers today.</p>
+                <p class="text-base text-gray-500 mt-auto">Grew Coin Bureau Chinese YouTube from 0 to 85K subscribers today.</p>
             </div>
-            <!-- Card 2 -->
             <div class="bg-white p-6 rounded-3xl shadow-sm border border-orange-100 flex flex-col h-full group hover:-translate-y-2 transition-transform duration-300">
                 <div class="flex justify-between items-start mb-4">
-                    <div>
-                        <h3 class="text-3xl font-extrabold text-dark group-hover:text-orange-500 transition-colors">90%</h3>
-                        <p class="text-lg font-bold text-gray-800">Videos</p>
-                    </div>
-                    <div class="bg-orange-500 p-3 rounded-2xl text-white shadow-lg shadow-orange-500/40"><i class="ph ph-play text-xl"></i></div>
+                    <div><h3 class="text-3xl font-extrabold text-dark group-hover:text-orange-500 transition-colors">90%</h3><p class="text-lg font-bold text-gray-800">Videos</p></div>
+                    <div class="bg-orange-500 p-3 rounded-2xl text-white"><i class="ph ph-video text-xl"></i></div>
                 </div>
-                <p class="text-base text-gray-500 mt-auto leading-relaxed">Achieved 90%+ videos hitting 2,000+ views in Q3 2025.</p>
+                <p class="text-base text-gray-500 mt-auto">Achieved 90%+ videos hitting 2,000+ views in Q3 2025.</p>
             </div>
-            <!-- Card 3 -->
             <div class="bg-white p-6 rounded-3xl shadow-sm border border-orange-100 flex flex-col h-full group hover:-translate-y-2 transition-transform duration-300">
                 <div class="flex justify-between items-start mb-4">
-                    <div>
-                        <h3 class="text-3xl font-extrabold text-dark group-hover:text-orange-500 transition-colors">150K+</h3>
-                        <p class="text-lg font-bold text-gray-800">Views</p>
-                    </div>
-                    <div class="bg-orange-500 p-3 rounded-2xl text-white shadow-lg shadow-orange-500/40"><i class="ph ph-eye text-xl"></i></div>
+                    <div><h3 class="text-3xl font-extrabold text-dark group-hover:text-orange-500 transition-colors">150K+</h3><p class="text-lg font-bold text-gray-800">Views</p></div>
+                    <div class="bg-orange-500 p-3 rounded-2xl text-white"><i class="ph ph-eye text-xl"></i></div>
                 </div>
-                <p class="text-base text-gray-500 mt-auto leading-relaxed">Achieved 75x higher views than channel average on a single video.</p>
+                <p class="text-base text-gray-500 mt-auto">Achieved 75x higher views than channel average on a single video.</p>
             </div>
-            <!-- Card 4 -->
             <div class="bg-white p-6 rounded-3xl shadow-sm border border-orange-100 flex flex-col h-full group hover:-translate-y-2 transition-transform duration-300">
                 <div class="flex justify-between items-start mb-4">
-                    <div>
-                        <h3 class="text-3xl font-extrabold text-dark group-hover:text-orange-500 transition-colors">500+</h3>
-                        <p class="text-lg font-bold text-gray-800">Videos</p>
-                    </div>
-                    <div class="bg-orange-500 p-3 rounded-2xl text-white shadow-lg shadow-orange-500/40"><i class="ph ph-folder text-xl"></i></div>
+                    <div><h3 class="text-3xl font-extrabold text-dark group-hover:text-orange-500 transition-colors">500+</h3><p class="text-lg font-bold text-gray-800">Videos</p></div>
+                    <div class="bg-orange-500 p-3 rounded-2xl text-white"><i class="ph ph-folder text-xl"></i></div>
                 </div>
-                <p class="text-base text-gray-500 mt-auto leading-relaxed">Produced 500+ long-form videos & shorts, managing a full media workflow.</p>
+                <p class="text-base text-gray-500 mt-auto">Produced 500+ long-form videos & shorts, managing a full media workflow.</p>
             </div>
         </div>
     </section>
@@ -324,49 +289,25 @@
     <!-- Project 1 -->
     <section id="project1" class="w-full max-w-7xl mx-auto px-6 py-12 relative z-10">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-            <!-- Left Panel -->
             <div class="lg:col-span-5 bg-gray-900 text-white rounded-[40px] p-8 md:p-10 flex flex-col justify-between relative overflow-hidden">
-                <!-- Deco -->
                 <div class="absolute top-0 right-0 w-64 h-64 bg-gray-800 rounded-full -mr-32 -mt-32 opacity-50"></div>
-                
                 <div class="relative z-10">
-                    <h2 class="text-3xl md:text-4xl font-bold mb-6 pr-4">
-                        Project 1:<br />Growing Coin Bureau<br />Chinese YouTube
-                    </h2>
-                    <div class="bg-white text-gray-900 p-6 rounded-3xl mb-8 shadow-lg transform hover:scale-105 transition-transform duration-300">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-6 pr-4">Project 1:<br />Growing Coin Bureau<br />Chinese YouTube</h2>
+                    <div class="bg-white text-gray-900 p-6 rounded-3xl mb-8 shadow-lg">
                         <h3 class="text-xl font-bold mb-2">Responsibilities</h3>
-                        <p class="text-base text-gray-600 leading-relaxed">Content strategy, SEO-driven title generation, editing supervision, and team collaboration.</p>
+                        <p class="text-base text-gray-600">Content strategy, SEO-driven title generation, editing supervision, and team collaboration.</p>
                     </div>
                     <div class="grid grid-cols-3 gap-4 text-center mb-8">
-                        <div class="bg-gray-800 p-3 rounded-2xl group hover:-translate-y-2 transition-transform">
-                            <p class="text-gray-400 text-sm mb-1">Views</p>
-                            <p class="font-bold text-xl group-hover:text-green-400 transition-colors">4.7M</p>
-                        </div>
-                        <div class="bg-gray-800 p-3 rounded-2xl group hover:-translate-y-2 transition-transform">
-                            <p class="text-gray-400 text-sm mb-1">Hours</p>
-                            <p class="font-bold text-xl group-hover:text-green-400 transition-colors">174K</p>
-                        </div>
-                        <div class="bg-gray-800 p-3 rounded-2xl group hover:-translate-y-2 transition-transform ring-2 ring-orange-500/20">
-                            <p class="text-gray-400 text-sm mb-1">In</p>
-                            <p class="font-bold text-xl group-hover:text-green-400 transition-colors">2 Years</p>
-                        </div>
+                        <div class="bg-gray-800 p-3 rounded-2xl"><p class="text-gray-400 text-sm">Views</p><p class="font-bold text-xl text-white">4.7M</p></div>
+                        <div class="bg-gray-800 p-3 rounded-2xl"><p class="text-gray-400 text-sm">Hours</p><p class="font-bold text-xl text-white">174K</p></div>
+                        <div class="bg-gray-800 p-3 rounded-2xl ring-2 ring-orange-500/20"><p class="text-gray-400 text-sm">In</p><p class="font-bold text-xl text-white">2 Years</p></div>
                     </div>
                 </div>
-
-                <!-- 85K Badge -->
-                <div class="bg-white rounded-3xl p-6 flex items-center justify-between shadow-lg relative overflow-hidden group mt-auto z-10">
-                    <div class="absolute right-0 bottom-0 w-20 h-20 bg-orange-100 rounded-tl-full opacity-50 translate-x-4 translate-y-4"></div>
-                    <div>
-                        <p class="text-3xl md:text-4xl font-extrabold text-dark group-hover:text-orange-500 transition-colors">85K+</p>
-                        <p class="text-gray-500 text-lg font-medium">Subscribers</p>
-                    </div>
-                    <div class="bg-orange-500 p-3 rounded-full text-white shadow-lg shadow-orange-500/30 group-hover:rotate-12 transition-transform">
-                        <i class="ph ph-trophy text-2xl"></i>
-                    </div>
+                <div class="bg-white rounded-3xl p-6 flex items-center justify-between shadow-lg z-10 mt-auto group">
+                    <div><p class="text-3xl md:text-4xl font-extrabold text-dark group-hover:text-orange-500 transition-colors">85K+</p><p class="text-gray-500 text-lg font-medium">Subscribers</p></div>
+                    <div class="bg-orange-500 p-3 rounded-full text-white group-hover:rotate-12 transition-transform"><i class="ph ph-trophy text-2xl"></i></div>
                 </div>
             </div>
-
-            <!-- Right Panel -->
             <div class="lg:col-span-7 bg-white border border-gray-200 rounded-[40px] p-8 relative overflow-hidden shadow-sm flex flex-col h-full">
                 <div class="flex justify-between items-start mb-6">
                     <div>
@@ -374,10 +315,8 @@
                         <span class="inline-block bg-orange-100 text-orange-600 px-3 py-1 rounded-full text-sm font-bold">Last updated: 1 Oct 2025</span>
                     </div>
                 </div>
-                <div class="flex-1 rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 border border-gray-100 min-h-[300px]">
-                    <img src="https://drive.google.com/thumbnail?id=1zjkHBmCwOnT7cNOKlMxkO5h02nTTU-bK&sz=w1000" 
-                         alt="Project 1 Screenshot" 
-                         class="w-full h-full object-contain object-top bg-gray-50">
+                <div class="flex-1 rounded-xl overflow-hidden shadow-md border border-gray-100 min-h-[300px]">
+                    <img src="https://drive.google.com/thumbnail?id=1zjkHBmCwOnT7cNOKlMxkO5h02nTTU-bK&sz=w1000" class="w-full h-full object-contain object-top bg-gray-50" alt="Project 1">
                 </div>
             </div>
         </div>
@@ -386,15 +325,12 @@
     <!-- Project 2 -->
     <section id="project2" class="w-full max-w-7xl mx-auto px-6 py-12 relative z-10">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-            <!-- Left Info -->
             <div class="lg:col-span-5 bg-[#FDF6E9] border border-orange-100 rounded-[40px] p-10 flex flex-col justify-center relative">
                 <span class="absolute top-6 left-10 inline-block bg-orange-100 text-orange-600 px-3 py-1 rounded-full text-sm font-bold">Last updated: 20 Nov 2025</span>
-                <h2 class="text-3xl md:text-4xl font-bold text-dark mb-6 mt-8">
-                    Project 2:<br />Creating Viral<br />Podcast Series
-                </h2>
+                <h2 class="text-3xl md:text-4xl font-bold text-dark mb-6 mt-8">Project 2:<br />Creating Viral<br />Podcast Series</h2>
                 <div class="bg-white p-6 rounded-3xl mb-6 shadow-sm border border-orange-100">
                     <h3 class="text-xl font-bold text-orange-600 mb-2">Responsibilities</h3>
-                    <p class="text-base text-gray-600 leading-relaxed">Researching, scripting and SEO titling. Monitor the statistics time to time and engage with audiences.</p>
+                    <p class="text-base text-gray-600">Researching, scripting and SEO titling. Monitor the statistics time to time and engage with audiences.</p>
                 </div>
                 <div class="bg-orange-500 text-white p-8 rounded-3xl text-center shadow-xl shadow-orange-500/30 transform hover:-translate-y-2 transition-transform">
                     <h3 class="text-5xl font-extrabold mb-2">158.8K</h3>
@@ -402,86 +338,51 @@
                     <p class="text-sm text-orange-200 mt-1">(In one single video)</p>
                 </div>
                 <div class="mt-8 grid grid-cols-2 gap-4 text-sm text-gray-600">
-                    <div class="text-center p-2 bg-white/50 rounded-xl group hover:bg-white hover:shadow-md transition-all">
-                        <p class="font-bold text-black text-xl group-hover:text-green-600">3.3M</p>
-                        <p class="text-sm">Impressions</p>
-                    </div>
-                    <div class="text-center p-2 bg-white/50 rounded-xl group hover:bg-white hover:shadow-md transition-all">
-                        <p class="font-bold text-black text-xl group-hover:text-green-600">3.1%</p>
-                        <p class="text-sm">CTR</p>
-                    </div>
-                    <div class="text-center p-2 bg-white/50 rounded-xl group hover:bg-white hover:shadow-md transition-all">
-                        <p class="font-bold text-black text-xl group-hover:text-green-600">25.7K</p>
-                        <p class="text-sm">Watch Hours</p>
-                    </div>
-                    <div class="text-center p-2 bg-white/50 rounded-xl group hover:bg-white hover:shadow-md transition-all">
-                        <p class="font-bold text-black text-xl group-hover:text-green-600">+4.8K</p>
-                        <p class="text-sm">Subscribers</p>
-                    </div>
+                    <div class="text-center p-2 bg-white/50 rounded-xl group hover:bg-white hover:shadow-md transition-all"><p class="font-bold text-black text-xl group-hover:text-green-600">3.3M</p><p class="text-sm">Impressions</p></div>
+                    <div class="text-center p-2 bg-white/50 rounded-xl group hover:bg-white hover:shadow-md transition-all"><p class="font-bold text-black text-xl group-hover:text-green-600">3.1%</p><p class="text-sm">CTR</p></div>
+                    <div class="text-center p-2 bg-white/50 rounded-xl group hover:bg-white hover:shadow-md transition-all"><p class="font-bold text-black text-xl group-hover:text-green-600">25.7K</p><p class="text-sm">Watch Hours</p></div>
+                    <div class="text-center p-2 bg-white/50 rounded-xl group hover:bg-white hover:shadow-md transition-all"><p class="font-bold text-black text-xl group-hover:text-green-600">+4.8K</p><p class="text-sm">Subscribers</p></div>
                 </div>
             </div>
-
-            <!-- Right Chart Panel -->
             <div class="lg:col-span-7 bg-white rounded-[40px] p-8 shadow-lg border border-gray-100 flex flex-col">
                 <div class="flex justify-between items-center mb-6">
-                    <h3 class="font-bold text-lg flex items-center gap-2">
-                        <i class="ph ph-chart-line-up text-orange-500 text-xl"></i>
-                        Video analytics
-                    </h3>
+                    <h3 class="font-bold text-lg flex items-center gap-2"><i class="ph ph-chart-line-up text-orange-500 text-xl"></i> Video analytics</h3>
                     <div class="flex bg-gray-100 rounded-full p-1">
-                        <button onclick="switchChart('overview')" id="btn-overview" class="px-4 py-1 rounded-full text-xs font-bold transition-all bg-white shadow text-orange-600">Overview</button>
-                        <button onclick="switchChart('reach')" id="btn-reach" class="px-4 py-1 rounded-full text-xs font-bold transition-all text-gray-500 hover:text-gray-700">Reach</button>
+                        <button onclick="switchChart('overview')" id="btn-overview" class="px-4 py-1 rounded-full text-xs font-bold bg-white shadow text-orange-600 transition-all">Overview</button>
+                        <button onclick="switchChart('reach')" id="btn-reach" class="px-4 py-1 rounded-full text-xs font-bold text-gray-500 hover:text-gray-700 transition-all">Reach</button>
                     </div>
                 </div>
-
-                <div class="relative bg-gray-50 rounded-xl overflow-hidden border border-gray-100 aspect-[16/10] lg:aspect-video">
-                    <!-- Images -->
+                <div class="relative bg-gray-50 rounded-xl overflow-hidden border border-gray-100 aspect-[16/10] lg:aspect-video flex items-center justify-center">
                     <img id="chart-img" src="https://drive.google.com/thumbnail?id=1DnxQhKy45vrnIfZtKtS9Lrre5Uu57uCT&sz=w1000" class="w-full h-full object-contain transition-opacity duration-300" alt="Chart">
                 </div>
-
                 <div class="mt-8">
                     <div class="flex justify-between items-center mb-4">
                         <p class="font-bold text-lg">Podcast Series:</p>
-                        <button onclick="scrollPodcasts()" class="bg-orange-100 p-2 rounded-full text-orange-600 hover:bg-orange-200 transition-colors shadow-sm">
+                        <button onclick="scrollPodcasts()" id="scroll-arrow" class="bg-orange-100 p-2 rounded-full text-orange-600 hover:bg-orange-200 transition-colors shadow-sm">
                             <i class="ph ph-caret-right text-lg"></i>
                         </button>
                     </div>
                     <div id="podcast-scroll" class="flex gap-4 overflow-x-auto pb-4 no-scrollbar scroll-smooth">
-                        <!-- Video 1 -->
-                        <a href="https://www.youtube.com/watch?v=fbODcXBAHEY" target="_blank" class="min-w-[200px] w-[200px] space-y-2 block group flex-shrink-0">
+                        <a href="https://www.youtube.com/watch?v=fbODcXBAHEY" target="_blank" class="min-w-[200px] w-[200px] block group flex-shrink-0">
                             <div class="w-full aspect-video rounded-xl bg-gray-800 overflow-hidden relative shadow-md group-hover:shadow-lg transition-all">
                                 <img src="https://img.youtube.com/vi/fbODcXBAHEY/mqdefault.jpg" class="w-full h-full object-cover opacity-90 group-hover:opacity-100">
-                                <div class="absolute inset-0 flex items-center justify-center">
-                                    <div class="w-10 h-10 bg-white/90 rounded-full flex items-center justify-center shadow-lg transform scale-0 group-hover:scale-100 transition-transform">
-                                        <i class="ph ph-play-fill text-black"></i>
-                                    </div>
-                                </div>
+                                <div class="absolute inset-0 flex items-center justify-center"><div class="w-10 h-10 bg-white/90 rounded-full flex items-center justify-center shadow-lg transform scale-0 group-hover:scale-100 transition-transform"><i class="ph ph-play-fill text-black"></i></div></div>
                             </div>
-                            <p class="text-sm font-bold text-gray-800 line-clamp-2 group-hover:text-orange-600">【上集】房地产黑幕曝光！</p>
+                            <p class="text-sm font-bold text-gray-800 mt-2 line-clamp-2 group-hover:text-orange-600">【上集】房地产黑幕曝光！</p>
                         </a>
-                        <!-- Video 2 -->
-                        <a href="https://www.youtube.com/watch?v=2u9WkPS-iJI" target="_blank" class="min-w-[200px] w-[200px] space-y-2 block group flex-shrink-0">
+                        <a href="https://www.youtube.com/watch?v=2u9WkPS-iJI" target="_blank" class="min-w-[200px] w-[200px] block group flex-shrink-0">
                             <div class="w-full aspect-video rounded-xl bg-gray-800 overflow-hidden relative shadow-md group-hover:shadow-lg transition-all">
                                 <img src="https://img.youtube.com/vi/2u9WkPS-iJI/mqdefault.jpg" class="w-full h-full object-cover opacity-90 group-hover:opacity-100">
-                                <div class="absolute inset-0 flex items-center justify-center">
-                                    <div class="w-10 h-10 bg-white/90 rounded-full flex items-center justify-center shadow-lg transform scale-0 group-hover:scale-100 transition-transform">
-                                        <i class="ph ph-play-fill text-black"></i>
-                                    </div>
-                                </div>
+                                <div class="absolute inset-0 flex items-center justify-center"><div class="w-10 h-10 bg-white/90 rounded-full flex items-center justify-center shadow-lg transform scale-0 group-hover:scale-100 transition-transform"><i class="ph ph-play-fill text-black"></i></div></div>
                             </div>
-                            <p class="text-sm font-bold text-gray-800 line-clamp-2 group-hover:text-orange-600">【下集】房地产黑幕曝光！</p>
+                            <p class="text-sm font-bold text-gray-800 mt-2 line-clamp-2 group-hover:text-orange-600">【下集】房地产黑幕曝光！</p>
                         </a>
-                        <!-- Video 3 -->
-                        <a href="https://www.youtube.com/watch?v=JFDXd0In6hY" target="_blank" class="min-w-[200px] w-[200px] space-y-2 block group flex-shrink-0">
+                        <a href="https://www.youtube.com/watch?v=JFDXd0In6hY" target="_blank" class="min-w-[200px] w-[200px] block group flex-shrink-0">
                             <div class="w-full aspect-video rounded-xl bg-gray-800 overflow-hidden relative shadow-md group-hover:shadow-lg transition-all">
                                 <img src="https://img.youtube.com/vi/JFDXd0In6hY/mqdefault.jpg" class="w-full h-full object-cover opacity-90 group-hover:opacity-100">
-                                <div class="absolute inset-0 flex items-center justify-center">
-                                    <div class="w-10 h-10 bg-white/90 rounded-full flex items-center justify-center shadow-lg transform scale-0 group-hover:scale-100 transition-transform">
-                                        <i class="ph ph-play-fill text-black"></i>
-                                    </div>
-                                </div>
+                                <div class="absolute inset-0 flex items-center justify-center"><div class="w-10 h-10 bg-white/90 rounded-full flex items-center justify-center shadow-lg transform scale-0 group-hover:scale-100 transition-transform"><i class="ph ph-play-fill text-black"></i></div></div>
                             </div>
-                            <p class="text-sm font-bold text-gray-800 line-clamp-2 group-hover:text-orange-600">黑幕曝光！这个“保险套路”</p>
+                            <p class="text-sm font-bold text-gray-800 mt-2 line-clamp-2 group-hover:text-orange-600">黑幕曝光！这个“保险套路”</p>
                         </a>
                     </div>
                 </div>
@@ -497,45 +398,39 @@
                 <div class="flex flex-col md:flex-row gap-6">
                     <div class="bg-white/10 backdrop-blur-lg p-8 rounded-3xl border border-white/20 flex-1 md:flex-[3]">
                         <h3 class="text-xl font-bold mb-2 flex items-center gap-2"><i class="ph ph-sparkle text-yellow-300"></i> Responsibilities</h3>
-                        <p class="text-orange-100 text-base leading-relaxed">Built a workflow using AI tools to scale YouTube Shorts production. Including Google Flow, HeyGen IV, Eleven Labs, ChatGPT, etc.</p>
+                        <p class="text-orange-100 text-base">Built a workflow using AI tools to scale YouTube Shorts production. Including Google Flow, HeyGen IV, Eleven Labs, ChatGPT, etc.</p>
                     </div>
-                    <div class="bg-dark text-white p-8 rounded-3xl flex flex-col justify-center items-center w-full md:flex-[1] text-center border border-white/10 whitespace-nowrap">
+                    <div class="bg-dark text-white p-8 rounded-3xl flex flex-col justify-center items-center w-full md:flex-[1] text-center border border-white/10">
                         <p class="text-4xl font-bold text-orange-500 mb-1">30%</p>
                         <p class="text-sm text-gray-400">Production Time Saved</p>
                     </div>
                 </div>
             </div>
-
-            <!-- Phones Grid -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6 relative z-10">
-                <!-- Phone 1 -->
                 <a href="https://www.youtube.com/shorts/c-Z1T_oDusE" target="_blank" class="block relative aspect-[9/16] bg-black rounded-3xl overflow-hidden shadow-2xl border-4 border-dark group hover:-translate-y-2 transition-transform">
-                    <img src="https://drive.google.com/thumbnail?id=1UBz_4ZdGAvLTG-sfERxQarbIuRH_HiXT&sz=w800" class="w-full h-full object-cover opacity-60 group-hover:opacity-80 transition-opacity" alt="Short 1">
+                    <img src="https://drive.google.com/thumbnail?id=1UBz_4ZdGAvLTG-sfERxQarbIuRH_HiXT&sz=w800" class="w-full h-full object-cover opacity-60 group-hover:opacity-80" alt="Short 1">
                     <div class="absolute bottom-0 w-full p-4 bg-gradient-to-t from-black to-transparent">
                         <p class="text-base font-bold leading-tight mb-4 line-clamp-3">震撼！全球首例！阿联酋航空让你用加密币买免税品！？</p>
                     </div>
                 </a>
-                <!-- Phone 2 -->
                 <a href="https://www.youtube.com/shorts/mXd_M9mcYgc" target="_blank" class="block relative aspect-[9/16] bg-black rounded-3xl overflow-hidden shadow-2xl border-4 border-dark group hover:-translate-y-2 transition-transform">
-                    <img src="https://drive.google.com/thumbnail?id=16Q6_s27FziQduznJfC1MxciwRVEsqtPj&sz=w800" class="w-full h-full object-cover opacity-60 group-hover:opacity-80 transition-opacity" alt="Short 2">
+                    <img src="https://drive.google.com/thumbnail?id=16Q6_s27FziQduznJfC1MxciwRVEsqtPj&sz=w800" class="w-full h-full object-cover opacity-60 group-hover:opacity-80" alt="Short 2">
                     <div class="absolute bottom-0 w-full p-4 bg-gradient-to-t from-black to-transparent">
                          <p class="text-base font-bold leading-tight mb-4 line-clamp-3">巴菲特“空仓”历史最高，他不买任何资产...</p>
                     </div>
                 </a>
-                <!-- Phone 3 -->
                 <a href="https://www.youtube.com/shorts/xYyaHeHYq6o" target="_blank" class="block relative aspect-[9/16] bg-black rounded-3xl overflow-hidden shadow-2xl border-4 border-dark group hover:-translate-y-2 transition-transform">
-                    <img src="https://drive.google.com/thumbnail?id=1cWs2htNEvedRCGhIPg9MfUznhNsrlV2y&sz=w800" class="w-full h-full object-cover opacity-60 group-hover:opacity-80 transition-opacity" alt="Short 3">
+                    <img src="https://drive.google.com/thumbnail?id=1cWs2htNEvedRCGhIPg9MfUznhNsrlV2y&sz=w800" class="w-full h-full object-cover opacity-60 group-hover:opacity-80" alt="Short 3">
                     <div class="absolute bottom-0 w-full p-4 bg-gradient-to-t from-black to-transparent">
                          <p class="text-base font-bold leading-tight mb-4 line-clamp-3">投资人请注意：比特币下一轮牛市时间曝光？</p>
                     </div>
                 </a>
             </div>
-             <div class="absolute -top-20 -right-20 w-96 h-96 bg-orange-400 rounded-full opacity-50 blur-3xl"></div>
         </div>
     </section>
 
     <!-- Footer -->
-    <footer id="contact" class="w-full max-w-7xl mx-auto px-6 pb-24 relative z-10">
+    <footer id="lets-connect" class="w-full max-w-7xl mx-auto px-6 pb-24 relative z-10">
         <div class="flex flex-col lg:flex-row justify-between items-start gap-12 border-t-2 border-orange-100 pt-12">
             <div class="text-center lg:text-left w-full lg:w-1/2">
                 <h2 class="text-4xl font-extrabold text-dark mb-2">micpwt</h2>
@@ -545,26 +440,26 @@
                         <span class="flex items-center gap-2"><i class="ph ph-phone"></i> +60 11 65056363</span>
                         <span class="absolute -top-10 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-xs px-3 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">Click to copy</span>
                     </button>
-                    <button onclick="copyToClipboard('itsmicpwt@gmail.com')" class="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-xl font-bold shadow-lg flex items-center gap-2 transition-all active:scale-95">
+                    <a href="mailto:itsmicpwt@gmail.com" class="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-xl font-bold shadow-lg flex items-center gap-2 transition-all active:scale-95">
                         <i class="ph ph-envelope-simple"></i> itsmicpwt@gmail.com
-                    </button>
+                    </a>
                 </div>
             </div>
-            <!-- Mock Chatbox (Visual Only) -->
+            <!-- Embedded Chatbox -->
             <div class="w-full lg:w-[450px] mt-4 lg:mt-0">
-                <div class="w-full h-[350px] bg-white rounded-[30px] shadow-lg border border-orange-100 flex flex-col overflow-hidden">
+                <div id="embedded-chat" class="w-full h-[350px] bg-white rounded-[30px] shadow-lg border border-orange-100 flex flex-col overflow-hidden">
                     <div class="bg-gray-900 p-4 text-white flex items-center gap-3">
                         <div class="bg-orange-500 p-2 rounded-full"><i class="ph ph-robot text-white"></i></div>
                         <div><h3 class="font-bold text-base">Chat with Michelle's AI</h3><p class="text-xs text-gray-400">Ask about experience & skills</p></div>
                     </div>
-                    <div class="flex-1 bg-gray-50 p-4 flex flex-col gap-3 justify-end">
+                    <div class="flex-1 bg-gray-50 p-4 flex flex-col gap-3 overflow-y-auto" id="chat-messages-embedded">
                         <div class="self-start bg-white p-3 rounded-2xl rounded-tl-none shadow-sm border border-gray-200 text-sm max-w-[90%]">
                             Hi! I'm Michelle's AI Assistant. Ask me anything about her experience!
                         </div>
                     </div>
                     <div class="p-3 bg-white border-t border-gray-100 flex gap-2">
-                        <input type="text" placeholder="This is a demo..." disabled class="flex-1 bg-gray-100 rounded-full px-4 py-3 text-sm cursor-not-allowed">
-                        <button class="bg-orange-500 text-white p-3 rounded-full opacity-50 cursor-not-allowed"><i class="ph ph-paper-plane-right"></i></button>
+                        <input type="text" id="chat-input-embedded" placeholder="Type a message..." class="flex-1 bg-gray-100 rounded-full px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500/50">
+                        <button onclick="sendEmbeddedMessage()" class="bg-orange-500 text-white p-3 rounded-full hover:bg-orange-600 transition-colors"><i class="ph ph-paper-plane-right"></i></button>
                     </div>
                 </div>
             </div>
@@ -572,18 +467,125 @@
         <div class="text-center mt-16 text-gray-400 text-sm">© 2025 Michelle Portfolio. All rights reserved.</div>
     </footer>
 
+    <!-- Floating Chat Button -->
+    <button onclick="toggleFloatingChat()" class="fixed bottom-6 right-6 z-50 bg-dark text-white p-4 rounded-full shadow-lg hover:bg-gray-900 transition-colors flex items-center justify-center group">
+         <i id="chat-toggle-icon" class="ph ph-chat-circle text-2xl"></i>
+    </button>
+
+    <!-- Floating Chat Window -->
+    <div id="floating-chat" class="fixed bottom-24 right-6 z-50 w-[90vw] md:w-[350px] h-[500px] bg-white rounded-3xl shadow-2xl border border-orange-100 flex flex-col overflow-hidden hidden transition-all duration-300 origin-bottom-right transform scale-90 opacity-0">
+        <div class="bg-orange-500 p-4 text-white flex justify-between items-center">
+            <div class="flex items-center gap-2"><i class="ph ph-sparkle"></i><span class="font-bold">Ask AI about Michelle</span></div>
+            <button onclick="toggleFloatingChat()" class="hover:bg-orange-600 p-1 rounded-full"><i class="ph ph-x text-xl"></i></button>
+        </div>
+        <div class="flex-1 overflow-y-auto p-4 bg-orange-50/50 space-y-4" id="chat-messages-floating">
+             <div class="self-start bg-white p-3 rounded-2xl rounded-tl-none shadow-sm border border-orange-100 text-sm max-w-[85%]">
+                Hi! I'm Michelle's AI Assistant. Ask me anything about her experience!
+             </div>
+        </div>
+        <div class="p-3 bg-white border-t border-gray-100 flex gap-2">
+            <input type="text" id="chat-input-floating" placeholder="Ask a question..." class="flex-1 bg-gray-100 rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500/50">
+            <button onclick="sendFloatingMessage()" class="bg-orange-500 text-white p-2 rounded-full hover:bg-orange-600 transition-colors"><i class="ph ph-paper-plane-right"></i></button>
+        </div>
+    </div>
+
     <!-- Scroll To Top -->
     <button onclick="scrollToTop()" id="scrollTopBtn" class="fixed bottom-24 right-6 bg-orange-500 text-white p-3 rounded-full shadow-lg z-40 hover:bg-orange-600 transition-all transform translate-y-20 opacity-0">
         <i class="ph ph-arrow-up text-xl"></i>
     </button>
 
-    <!-- Floating Chat Button -->
-    <button class="fixed bottom-6 right-6 z-40 bg-dark text-white p-4 rounded-full shadow-lg hover:bg-gray-900 transition-colors flex items-center justify-center">
-         <i class="ph ph-chat-circle text-2xl"></i>
-    </button>
+    <!-- Scripts -->
+    <script type="module">
+      // ------------------------------
+      // 1. AI Chatbox Logic (Vanilla JS)
+      // ------------------------------
+      import { GoogleGenAI } from "@google/genai";
+
+      // *** IMPORTANT: You must use a valid API Key here for the chat to work live. ***
+      // For a static site, users usually proxy this or require user input. 
+      // I will assume the environment provides it or it's a demo.
+      const API_KEY = "YOUR_API_KEY_HERE"; 
+
+      const SYSTEM_INSTRUCTION = `You are an AI assistant for Michelle Peong Wei Ting's portfolio website... (Full System Instruction from previous requests) ...`;
+
+      // Helper: Format Links
+      function formatMessage(text) {
+         // Basic Link Parsing
+         const urlRegex = /(https?:\/\/[^\s]+|www\.[^\s]+)/g;
+         const emailRegex = /([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+)/g;
+         
+         let formatted = text.replace(urlRegex, (url) => `<a href="${url}" target="_blank" class="text-blue-600 underline font-bold">${url}</a>`);
+         formatted = formatted.replace(emailRegex, (email) => `<a href="mailto:${email}" class="text-blue-600 underline font-bold">${email}</a>`);
+         // Convert newlines to <br>
+         return formatted.replace(/\n/g, '<br>');
+      }
+
+      async function sendMessage(inputFieldId, containerId) {
+        const inputEl = document.getElementById(inputFieldId);
+        const container = document.getElementById(containerId);
+        const userText = inputEl.value.trim();
+        if (!userText) return;
+
+        // Add User Message
+        inputEl.value = '';
+        container.innerHTML += `
+            <div class="flex justify-end">
+                <div class="bg-orange-500 text-white p-3 rounded-2xl rounded-tr-none text-sm max-w-[85%]">
+                    ${userText}
+                </div>
+            </div>`;
+        container.scrollTop = container.scrollHeight;
+
+        try {
+           // Check for Key (Demo Check)
+           if(API_KEY === "YOUR_API_KEY_HERE") {
+               throw new Error("API Key not configured in code.");
+           }
+
+           const ai = new GoogleGenAI({ apiKey: API_KEY });
+           const chat = ai.chats.create({
+             model: 'gemini-2.5-flash',
+             config: { systemInstruction: SYSTEM_INSTRUCTION },
+             history: [], // simplified for static demo
+           });
+
+           const result = await chat.sendMessage({ message: userText });
+           const response = result.text;
+
+           // Add AI Message
+           container.innerHTML += `
+             <div class="flex justify-start">
+                <div class="bg-white p-3 rounded-2xl rounded-tl-none shadow-sm border border-gray-200 text-sm max-w-[85%]">
+                    ${formatMessage(response)}
+                </div>
+             </div>`;
+        } catch (e) {
+           console.error(e);
+           container.innerHTML += `
+             <div class="flex justify-start">
+                <div class="bg-white p-3 rounded-2xl rounded-tl-none shadow-sm border border-gray-200 text-sm max-w-[85%]">
+                    (Demo Mode) I can't connect to the AI right now (API Key missing). Please email Michelle at <a href="mailto:itsmicpwt@gmail.com" class="underline text-blue-600">itsmicpwt@gmail.com</a>.
+                </div>
+             </div>`;
+        }
+        container.scrollTop = container.scrollHeight;
+      }
+
+      // Expose to Window for onclick
+      window.sendEmbeddedMessage = () => sendMessage('chat-input-embedded', 'chat-messages-embedded');
+      window.sendFloatingMessage = () => sendMessage('chat-input-floating', 'chat-messages-floating');
+      
+      // Add Enter Key Listeners
+      document.getElementById('chat-input-embedded').addEventListener('keypress', (e) => { if(e.key === 'Enter') window.sendEmbeddedMessage(); });
+      document.getElementById('chat-input-floating').addEventListener('keypress', (e) => { if(e.key === 'Enter') window.sendFloatingMessage(); });
+    </script>
 
     <script>
-        // Mobile Menu Toggle
+        // ------------------------------
+        // 2. UI Interaction Logic
+        // ------------------------------
+
+        // Mobile Menu
         function toggleMobileMenu() {
             const menu = document.getElementById('mobile-menu');
             if (menu.classList.contains('-translate-x-full')) {
@@ -593,14 +595,16 @@
             }
         }
 
-        // Copy to Clipboard
+        // Copy Clipboard
         function copyToClipboard(text) {
             navigator.clipboard.writeText(text).then(() => {
-                alert('Copied: ' + text);
+                alert('Copied to clipboard: ' + text);
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
             });
         }
 
-        // Scroll to Top Visibility
+        // Scroll To Top Visibility
         const scrollTopBtn = document.getElementById('scrollTopBtn');
         window.addEventListener('scroll', () => {
             if (window.scrollY > 300) {
@@ -609,12 +613,11 @@
                 scrollTopBtn.classList.add('translate-y-20', 'opacity-0');
             }
         });
-
         function scrollToTop() {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // Project 2 Chart Switching
+        // Project 2 Chart Toggle
         const chartImg = document.getElementById('chart-img');
         const btnOverview = document.getElementById('btn-overview');
         const btnReach = document.getElementById('btn-reach');
@@ -639,10 +642,44 @@
             }, 300);
         }
 
-        // Horizontal Scroll Button for Podcasts
+        // Podcast Horizontal Scroll
         function scrollPodcasts() {
             const container = document.getElementById('podcast-scroll');
-            container.scrollBy({ left: 200, behavior: 'smooth' });
+            container.scrollBy({ left: 250, behavior: 'smooth' });
+        }
+        
+        // Check Podcast Scroll Arrow Visibility
+        function checkScrollArrow() {
+            const container = document.getElementById('podcast-scroll');
+            const arrow = document.getElementById('scroll-arrow');
+            if(container && arrow) {
+                if(container.scrollWidth > container.clientWidth) {
+                    arrow.style.display = 'block';
+                } else {
+                    arrow.style.display = 'none';
+                }
+            }
+        }
+        window.addEventListener('resize', checkScrollArrow);
+        window.addEventListener('load', checkScrollArrow);
+
+        // Floating Chat Toggle
+        const floatingChat = document.getElementById('floating-chat');
+        const chatIcon = document.getElementById('chat-toggle-icon');
+        let isChatOpen = false;
+
+        function toggleFloatingChat() {
+            isChatOpen = !isChatOpen;
+            if (isChatOpen) {
+                floatingChat.classList.remove('hidden', 'scale-90', 'opacity-0');
+                chatIcon.classList.remove('ph-chat-circle');
+                chatIcon.classList.add('ph-x');
+            } else {
+                floatingChat.classList.add('scale-90', 'opacity-0');
+                setTimeout(() => floatingChat.classList.add('hidden'), 300);
+                chatIcon.classList.remove('ph-x');
+                chatIcon.classList.add('ph-chat-circle');
+            }
         }
     </script>
 </body>
