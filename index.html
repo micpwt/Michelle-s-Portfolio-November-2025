@@ -1,66 +1,649 @@
 <!DOCTYPE html>
-<html lang="en">
-  <head>
+<html lang="en" class="scroll-smooth">
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Michelle | YouTube Growth Strategist</title>
+    <title>Michelle Peong | YouTube Growth Strategist</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <style>
-      body {
-        font-family: 'Outfit', sans-serif;
-        background-color: #FFFBF4; /* Cream background from PDF */
-        color: #1A1A1A;
-        overflow-x: hidden;
-      }
-      /* Custom Scrollbar */
-      ::-webkit-scrollbar {
-        width: 10px;
-      }
-      ::-webkit-scrollbar-track {
-        background: #FFFBF4;
-      }
-      ::-webkit-scrollbar-thumb {
-        background: #F5A524;
-        border-radius: 5px;
-      }
-    </style>
+    
+    <!-- Phosphor Icons (Lightweight icon library) -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
     <script>
       tailwind.config = {
         theme: {
           extend: {
+            fontFamily: {
+              sans: ['Outfit', 'sans-serif'],
+            },
             colors: {
               cream: '#FFFBF4',
               orange: {
-                400: '#FBBF24',
+                50: '#FFF7ED',
+                100: '#FFEDD5',
+                200: '#FED7AA',
+                300: '#FDBA74',
+                400: '#FB923C',
                 500: '#F5A524',
-                600: '#D97706',
+                600: '#EA580C',
                 900: '#7C2D12',
               },
               dark: '#1A1A1A',
-              card: '#FFFFFF',
+            },
+            animation: {
+              'marquee': 'marquee 20s linear infinite',
+              'float': 'float 6s ease-in-out infinite',
+              'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            },
+            keyframes: {
+              marquee: {
+                '0%': { transform: 'translateX(0%)' },
+                '100%': { transform: 'translateX(-100%)' },
+              },
+              float: {
+                '0%, 100%': { transform: 'translateY(0)' },
+                '50%': { transform: 'translateY(-20px)' },
+              }
             }
           }
         }
       }
     </script>
-  <script type="importmap">
+    <style>
+      body {
+        background-color: #FFFBF4;
+        color: #1A1A1A;
+        overflow-x: hidden;
+      }
+      /* Hide scrollbar for ticker */
+      .no-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+      .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+      
+      /* Gradient Text */
+      .text-gradient {
+        background-clip: text;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-image: linear-gradient(to right, #F5A524, #EA580C);
+      }
+    </style>
+<script type="importmap">
 {
   "imports": {
-    "react/": "https://aistudiocdn.com/react@^19.2.0/",
     "react": "https://aistudiocdn.com/react@^19.2.0",
-    "framer-motion": "https://aistudiocdn.com/framer-motion@^12.23.24",
     "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.0/",
+    "react/": "https://aistudiocdn.com/react@^19.2.0/",
+    "framer-motion": "https://aistudiocdn.com/framer-motion@^12.23.24",
     "lucide-react": "https://aistudiocdn.com/lucide-react@^0.554.0",
-    "recharts": "https://aistudiocdn.com/recharts@^3.4.1",
     "@google/genai": "https://aistudiocdn.com/@google/genai@^1.30.0"
   }
 }
 </script>
 </head>
-  <body>
-    <div id="root"></div>
-  </body>
+<body class="relative">
+
+    <!-- Grain Texture Overlay -->
+    <div class="fixed inset-0 opacity-[0.04] pointer-events-none z-0 mix-blend-multiply" 
+         style="background-image: url('data:image/svg+xml,%3Csvg viewBox=%270 0 200 200%27 xmlns=%27http://www.w3.org/2000/svg%27%3E%3Cfilter id=%27noiseFilter%27%3E%3CfeTurbulence type=%27fractalNoise%27 baseFrequency=%270.65%27 numOctaves=%273%27 stitchTiles=%27stitch%27/%3E%3C/filter%3E%3Crect width=%27100%25%27 height=%27100%25%27 filter=%27url(%23noiseFilter)%27/%3E%3C/svg%3E');">
+    </div>
+
+    <!-- Floating Stars Decoration Container -->
+    <div class="fixed inset-0 pointer-events-none z-0 overflow-hidden" id="star-container">
+        <!-- JS will inject stars here, or we hardcode a few -->
+        <img src="https://drive.google.com/thumbnail?id=1cu8q7J0IC4s0ASCLm4T9JDElmC51YlKi&sz=w200" class="absolute top-[10%] left-[5%] w-8 h-8 opacity-40 animate-pulse-slow" alt="">
+        <img src="https://drive.google.com/thumbnail?id=1cu8q7J0IC4s0ASCLm4T9JDElmC51YlKi&sz=w200" class="absolute top-[40%] right-[10%] w-12 h-12 opacity-20 animate-float" alt="">
+    </div>
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 transition-all duration-300" id="navbar">
+        <!-- Desktop Nav -->
+        <div class="hidden lg:flex justify-between items-center max-w-7xl mx-auto px-6 py-6">
+            <!-- Menu Pills -->
+            <div class="bg-white/90 backdrop-blur-md px-8 py-4 rounded-full shadow-sm border border-orange-100 flex gap-8">
+                <a href="#home" class="text-sm font-bold text-gray-600 hover:text-orange-600 transition-colors">Home</a>
+                <a href="#achievements" class="text-sm font-bold text-gray-600 hover:text-orange-600 transition-colors">Achievements</a>
+                <a href="#project1" class="text-sm font-bold text-gray-600 hover:text-orange-600 transition-colors">Project 1</a>
+                <a href="#project2" class="text-sm font-bold text-gray-600 hover:text-orange-600 transition-colors">Project 2</a>
+                <a href="#project3" class="text-sm font-bold text-gray-600 hover:text-orange-600 transition-colors">Project 3</a>
+                <a href="#contact" class="text-sm font-bold text-gray-600 hover:text-orange-600 transition-colors">Let's Connect</a>
+            </div>
+
+            <!-- Contact Pill -->
+            <div class="bg-white/90 backdrop-blur-md px-8 py-4 rounded-full shadow-sm border border-orange-100 flex gap-4 items-center text-sm font-medium text-gray-600">
+                <button onclick="copyToClipboard('+601165056363')" class="flex items-center gap-2 hover:text-orange-600 transition-colors group relative">
+                    <i class="ph ph-phone text-lg"></i>
+                    <span>+60 11 65056363</span>
+                    <span class="absolute top-full mt-2 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">Click to copy</span>
+                </button>
+                <div class="w-px bg-gray-300 h-4"></div>
+                <a href="mailto:itsmicpwt@gmail.com" class="flex items-center gap-2 hover:text-orange-600 transition-colors">
+                    <i class="ph ph-envelope-simple text-lg"></i>
+                    <span>itsmicpwt@gmail.com</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Mobile Nav Header -->
+        <div class="lg:hidden flex items-center justify-between px-4 py-3">
+            <button onclick="toggleMobileMenu()" class="bg-white/90 backdrop-blur p-2 rounded-full shadow-lg text-orange-600 border border-orange-100 z-50 pointer-events-auto">
+                <i class="ph ph-list text-xl"></i>
+            </button>
+
+            <!-- Mobile Contact Pill -->
+            <div class="flex items-center gap-3 bg-white/90 backdrop-blur-md px-4 py-2 rounded-full shadow-sm border border-orange-50 pointer-events-auto">
+                <button onclick="copyToClipboard('+601165056363')" class="flex items-center gap-1.5 text-[10px] xs:text-xs font-bold text-gray-700 hover:text-orange-600 transition-colors">
+                    <i class="ph ph-phone text-orange-500"></i>
+                    <span>+60 11 65056363</span>
+                </button>
+                <div class="w-px h-3 bg-gray-300"></div>
+                <a href="mailto:itsmicpwt@gmail.com" class="flex items-center gap-1.5 text-[10px] xs:text-xs font-bold text-gray-700 hover:text-orange-600 transition-colors">
+                    <i class="ph ph-envelope-simple text-orange-500"></i>
+                    <span class="truncate max-w-[120px]">itsmicpwt@gmail.com</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Drawer -->
+        <div id="mobile-menu" class="fixed inset-0 bg-[#FFFBF4] z-40 transform -translate-x-full transition-transform duration-300 flex flex-col p-8 lg:hidden overflow-y-auto">
+             <div class="flex justify-end mb-8">
+               <button onclick="toggleMobileMenu()" class="bg-orange-100 p-2 rounded-full text-orange-600">
+                 <i class="ph ph-x text-2xl"></i>
+               </button>
+             </div>
+             <nav class="flex flex-col gap-6 mt-8">
+               <a href="#home" onclick="toggleMobileMenu()" class="text-3xl font-extrabold text-dark hover:text-orange-500 transition-colors">Home</a>
+               <a href="#achievements" onclick="toggleMobileMenu()" class="text-3xl font-extrabold text-dark hover:text-orange-500 transition-colors">Achievements</a>
+               <a href="#project1" onclick="toggleMobileMenu()" class="text-3xl font-extrabold text-dark hover:text-orange-500 transition-colors">Project 1</a>
+               <a href="#project2" onclick="toggleMobileMenu()" class="text-3xl font-extrabold text-dark hover:text-orange-500 transition-colors">Project 2</a>
+               <a href="#project3" onclick="toggleMobileMenu()" class="text-3xl font-extrabold text-dark hover:text-orange-500 transition-colors">Project 3</a>
+               <a href="#contact" onclick="toggleMobileMenu()" class="text-3xl font-extrabold text-dark hover:text-orange-500 transition-colors">Let's connect</a>
+             </nav>
+             <div class="mt-auto flex justify-center opacity-50">
+                 <img src="https://drive.google.com/thumbnail?id=1cu8q7J0IC4s0ASCLm4T9JDElmC51YlKi&sz=w200" class="w-16 h-16 animate-pulse" alt="">
+             </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="relative w-full pt-24 lg:pt-40 pb-16 overflow-hidden">
+        <!-- Background Gradient -->
+        <div class="absolute inset-0 bg-gradient-to-br from-orange-100/40 via-[#FFFBF4] to-orange-200/30 pointer-events-none z-0"></div>
+        
+        <div class="w-full max-w-7xl mx-auto px-6 relative z-10">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <!-- Text -->
+                <div class="flex flex-col items-center lg:items-start text-center lg:text-left order-1">
+                    <div class="relative">
+                        <img src="https://drive.google.com/thumbnail?id=1cu8q7J0IC4s0ASCLm4T9JDElmC51YlKi&sz=w200" class="absolute -top-12 -left-12 w-16 h-16 animate-bounce hidden lg:block" alt="Star">
+                        <h1 class="text-5xl sm:text-6xl md:text-7xl font-extrabold text-dark leading-tight mb-6">
+                            Hi There,<br />
+                            I'm Michelle
+                        </h1>
+                    </div>
+                    <p class="text-xl text-gray-600 mb-8 max-w-md leading-relaxed">
+                        YouTube Growth Strategist & Media Manager. Helping channels succeed by blending Content Strategy, SEO, and AI-powered optimization.
+                    </p>
+                    <a href="#achievements" class="bg-orange-500 text-white px-8 py-4 rounded-full font-bold shadow-lg shadow-orange-500/30 flex items-center gap-2 hover:scale-105 transition-transform">
+                        Learn More Below
+                        <i class="ph ph-arrow-right text-xl"></i>
+                    </a>
+                </div>
+
+                <!-- Avatar Image -->
+                <div class="relative flex justify-center order-2">
+                     <!-- Decorative Blob -->
+                     <div class="absolute top-10 right-10 bg-white/40 backdrop-blur-md p-4 rounded-2xl shadow-xl rotate-12 hidden lg:block animate-float">
+                        <span class="text-3xl">✨</span>
+                     </div>
+
+                     <!-- Main Avatar Circle -->
+                     <div class="relative z-10 bg-gradient-to-b from-orange-200 to-orange-50 rounded-full overflow-hidden w-64 h-64 sm:w-80 sm:h-80 lg:w-[450px] lg:h-[450px] flex items-end justify-center border-4 border-white shadow-2xl group">
+                        <img src="https://drive.google.com/thumbnail?id=19NPwLZPyCRuei6QPVfnsaV767OHNqAjW&sz=w1000" 
+                             alt="Michelle" 
+                             class="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-700"
+                             onerror="this.src='https://api.dicebear.com/7.x/avataaars/svg?seed=Michelle'">
+                     </div>
+
+                     <!-- Floating Badge: Subscribers -->
+                     <div class="absolute bottom-4 -left-4 sm:bottom-10 lg:left-10 bg-white p-3 sm:p-4 rounded-2xl shadow-xl flex items-center gap-3 z-20 animate-float" style="animation-delay: 1s;">
+                        <div class="bg-green-100 p-2 rounded-full text-green-600 font-bold text-sm sm:text-lg">+85K</div>
+                        <div>
+                            <p class="text-xs sm:text-sm text-gray-500 font-semibold">Subscribers</p>
+                            <p class="text-sm sm:text-base font-bold text-dark">Coin Bureau Chinese</p>
+                        </div>
+                     </div>
+
+                     <!-- Floating Badge: Produced -->
+                     <div class="absolute top-4 -right-4 sm:top-10 lg:right-10 bg-white p-3 sm:p-4 rounded-2xl shadow-xl flex items-center gap-3 z-20 animate-float" style="animation-delay: 2s;">
+                        <div class="bg-orange-100 p-2 rounded-full text-orange-600 font-bold text-sm sm:text-lg">500+</div>
+                        <div>
+                            <p class="text-xs sm:text-sm text-gray-500 font-semibold">Produced</p>
+                            <p class="text-sm sm:text-base font-bold text-dark">Videos</p>
+                        </div>
+                     </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Ticker -->
+    <div class="w-full bg-[#FDBA74] py-4 overflow-hidden border-y-2 border-orange-300 relative z-10">
+        <div class="flex whitespace-nowrap w-[200%] animate-marquee">
+            <!-- Content repeated for infinite scroll -->
+            <div class="flex items-center gap-12 pr-12">
+                <div class="flex items-center gap-4"><span class="text-white font-bold text-lg uppercase tracking-wider">Content Strategy</span><span class="text-white opacity-70">+</span></div>
+                <div class="flex items-center gap-4"><span class="text-white font-bold text-lg uppercase tracking-wider">Media Creation</span><span class="text-white opacity-70">+</span></div>
+                <div class="flex items-center gap-4"><span class="text-white font-bold text-lg uppercase tracking-wider">Search Engine Optimization</span><span class="text-white opacity-70">+</span></div>
+                <div class="flex items-center gap-4"><span class="text-white font-bold text-lg uppercase tracking-wider">AI-driven Workflows</span><span class="text-white opacity-70">+</span></div>
+                <div class="flex items-center gap-4"><span class="text-white font-bold text-lg uppercase tracking-wider">Audience Analytics</span><span class="text-white opacity-70">+</span></div>
+                <div class="flex items-center gap-4"><span class="text-white font-bold text-lg uppercase tracking-wider">Brand Growth</span><span class="text-white opacity-70">+</span></div>
+            </div>
+            <!-- Duplicated content -->
+            <div class="flex items-center gap-12 pr-12">
+                <div class="flex items-center gap-4"><span class="text-white font-bold text-lg uppercase tracking-wider">Content Strategy</span><span class="text-white opacity-70">+</span></div>
+                <div class="flex items-center gap-4"><span class="text-white font-bold text-lg uppercase tracking-wider">Media Creation</span><span class="text-white opacity-70">+</span></div>
+                <div class="flex items-center gap-4"><span class="text-white font-bold text-lg uppercase tracking-wider">Search Engine Optimization</span><span class="text-white opacity-70">+</span></div>
+                <div class="flex items-center gap-4"><span class="text-white font-bold text-lg uppercase tracking-wider">AI-driven Workflows</span><span class="text-white opacity-70">+</span></div>
+                <div class="flex items-center gap-4"><span class="text-white font-bold text-lg uppercase tracking-wider">Audience Analytics</span><span class="text-white opacity-70">+</span></div>
+                <div class="flex items-center gap-4"><span class="text-white font-bold text-lg uppercase tracking-wider">Brand Growth</span><span class="text-white opacity-70">+</span></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Achievements Section -->
+    <section id="achievements" class="w-full max-w-7xl mx-auto px-6 py-20 relative z-10">
+        <div class="mb-12">
+            <div class="flex items-center gap-2 mb-2">
+                <div class="w-2 h-2 rounded-full bg-orange-500"></div>
+                <span class="text-orange-600 font-bold uppercase text-xs tracking-widest">Achievements</span>
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-end">
+                <h2 class="text-4xl font-extrabold text-dark">Some of My <br />Accomplishments</h2>
+                <p class="text-gray-600 mb-4 max-w-lg text-base md:text-lg">
+                    I build systems that combine creativity with analytics, so every video not only looks great, but also reaches the right audience.
+                </p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <!-- Card 1 -->
+            <div class="bg-white p-6 rounded-3xl shadow-sm border border-orange-100 flex flex-col h-full group hover:-translate-y-2 transition-transform duration-300">
+                <div class="flex justify-between items-start mb-4">
+                    <div>
+                        <h3 class="text-3xl font-extrabold text-dark group-hover:text-orange-500 transition-colors">85K+</h3>
+                        <p class="text-lg font-bold text-gray-800">Subscribers</p>
+                    </div>
+                    <div class="bg-orange-500 p-3 rounded-2xl text-white shadow-lg shadow-orange-500/40"><i class="ph ph-users text-xl"></i></div>
+                </div>
+                <p class="text-base text-gray-500 mt-auto leading-relaxed">Grew Coin Bureau Chinese YouTube from 0 to 85K subscribers today.</p>
+            </div>
+            <!-- Card 2 -->
+            <div class="bg-white p-6 rounded-3xl shadow-sm border border-orange-100 flex flex-col h-full group hover:-translate-y-2 transition-transform duration-300">
+                <div class="flex justify-between items-start mb-4">
+                    <div>
+                        <h3 class="text-3xl font-extrabold text-dark group-hover:text-orange-500 transition-colors">90%</h3>
+                        <p class="text-lg font-bold text-gray-800">Videos</p>
+                    </div>
+                    <div class="bg-orange-500 p-3 rounded-2xl text-white shadow-lg shadow-orange-500/40"><i class="ph ph-play text-xl"></i></div>
+                </div>
+                <p class="text-base text-gray-500 mt-auto leading-relaxed">Achieved 90%+ videos hitting 2,000+ views in Q3 2025.</p>
+            </div>
+            <!-- Card 3 -->
+            <div class="bg-white p-6 rounded-3xl shadow-sm border border-orange-100 flex flex-col h-full group hover:-translate-y-2 transition-transform duration-300">
+                <div class="flex justify-between items-start mb-4">
+                    <div>
+                        <h3 class="text-3xl font-extrabold text-dark group-hover:text-orange-500 transition-colors">150K+</h3>
+                        <p class="text-lg font-bold text-gray-800">Views</p>
+                    </div>
+                    <div class="bg-orange-500 p-3 rounded-2xl text-white shadow-lg shadow-orange-500/40"><i class="ph ph-eye text-xl"></i></div>
+                </div>
+                <p class="text-base text-gray-500 mt-auto leading-relaxed">Achieved 75x higher views than channel average on a single video.</p>
+            </div>
+            <!-- Card 4 -->
+            <div class="bg-white p-6 rounded-3xl shadow-sm border border-orange-100 flex flex-col h-full group hover:-translate-y-2 transition-transform duration-300">
+                <div class="flex justify-between items-start mb-4">
+                    <div>
+                        <h3 class="text-3xl font-extrabold text-dark group-hover:text-orange-500 transition-colors">500+</h3>
+                        <p class="text-lg font-bold text-gray-800">Videos</p>
+                    </div>
+                    <div class="bg-orange-500 p-3 rounded-2xl text-white shadow-lg shadow-orange-500/40"><i class="ph ph-folder text-xl"></i></div>
+                </div>
+                <p class="text-base text-gray-500 mt-auto leading-relaxed">Produced 500+ long-form videos & shorts, managing a full media workflow.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Project 1 -->
+    <section id="project1" class="w-full max-w-7xl mx-auto px-6 py-12 relative z-10">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            <!-- Left Panel -->
+            <div class="lg:col-span-5 bg-gray-900 text-white rounded-[40px] p-8 md:p-10 flex flex-col justify-between relative overflow-hidden">
+                <!-- Deco -->
+                <div class="absolute top-0 right-0 w-64 h-64 bg-gray-800 rounded-full -mr-32 -mt-32 opacity-50"></div>
+                
+                <div class="relative z-10">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-6 pr-4">
+                        Project 1:<br />Growing Coin Bureau<br />Chinese YouTube
+                    </h2>
+                    <div class="bg-white text-gray-900 p-6 rounded-3xl mb-8 shadow-lg transform hover:scale-105 transition-transform duration-300">
+                        <h3 class="text-xl font-bold mb-2">Responsibilities</h3>
+                        <p class="text-base text-gray-600 leading-relaxed">Content strategy, SEO-driven title generation, editing supervision, and team collaboration.</p>
+                    </div>
+                    <div class="grid grid-cols-3 gap-4 text-center mb-8">
+                        <div class="bg-gray-800 p-3 rounded-2xl group hover:-translate-y-2 transition-transform">
+                            <p class="text-gray-400 text-sm mb-1">Views</p>
+                            <p class="font-bold text-xl group-hover:text-green-400 transition-colors">4.7M</p>
+                        </div>
+                        <div class="bg-gray-800 p-3 rounded-2xl group hover:-translate-y-2 transition-transform">
+                            <p class="text-gray-400 text-sm mb-1">Hours</p>
+                            <p class="font-bold text-xl group-hover:text-green-400 transition-colors">174K</p>
+                        </div>
+                        <div class="bg-gray-800 p-3 rounded-2xl group hover:-translate-y-2 transition-transform ring-2 ring-orange-500/20">
+                            <p class="text-gray-400 text-sm mb-1">In</p>
+                            <p class="font-bold text-xl group-hover:text-green-400 transition-colors">2 Years</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 85K Badge -->
+                <div class="bg-white rounded-3xl p-6 flex items-center justify-between shadow-lg relative overflow-hidden group mt-auto z-10">
+                    <div class="absolute right-0 bottom-0 w-20 h-20 bg-orange-100 rounded-tl-full opacity-50 translate-x-4 translate-y-4"></div>
+                    <div>
+                        <p class="text-3xl md:text-4xl font-extrabold text-dark group-hover:text-orange-500 transition-colors">85K+</p>
+                        <p class="text-gray-500 text-lg font-medium">Subscribers</p>
+                    </div>
+                    <div class="bg-orange-500 p-3 rounded-full text-white shadow-lg shadow-orange-500/30 group-hover:rotate-12 transition-transform">
+                        <i class="ph ph-trophy text-2xl"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Panel -->
+            <div class="lg:col-span-7 bg-white border border-gray-200 rounded-[40px] p-8 relative overflow-hidden shadow-sm flex flex-col h-full">
+                <div class="flex justify-between items-start mb-6">
+                    <div>
+                        <p class="text-gray-500 text-base mb-2">Scaled a channel from 0 to 85K subscribers.</p>
+                        <span class="inline-block bg-orange-100 text-orange-600 px-3 py-1 rounded-full text-sm font-bold">Last updated: 1 Oct 2025</span>
+                    </div>
+                </div>
+                <div class="flex-1 rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 border border-gray-100 min-h-[300px]">
+                    <img src="https://drive.google.com/thumbnail?id=1zjkHBmCwOnT7cNOKlMxkO5h02nTTU-bK&sz=w1000" 
+                         alt="Project 1 Screenshot" 
+                         class="w-full h-full object-contain object-top bg-gray-50">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Project 2 -->
+    <section id="project2" class="w-full max-w-7xl mx-auto px-6 py-12 relative z-10">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            <!-- Left Info -->
+            <div class="lg:col-span-5 bg-[#FDF6E9] border border-orange-100 rounded-[40px] p-10 flex flex-col justify-center relative">
+                <span class="absolute top-6 left-10 inline-block bg-orange-100 text-orange-600 px-3 py-1 rounded-full text-sm font-bold">Last updated: 20 Nov 2025</span>
+                <h2 class="text-3xl md:text-4xl font-bold text-dark mb-6 mt-8">
+                    Project 2:<br />Creating Viral<br />Podcast Series
+                </h2>
+                <div class="bg-white p-6 rounded-3xl mb-6 shadow-sm border border-orange-100">
+                    <h3 class="text-xl font-bold text-orange-600 mb-2">Responsibilities</h3>
+                    <p class="text-base text-gray-600 leading-relaxed">Researching, scripting and SEO titling. Monitor the statistics time to time and engage with audiences.</p>
+                </div>
+                <div class="bg-orange-500 text-white p-8 rounded-3xl text-center shadow-xl shadow-orange-500/30 transform hover:-translate-y-2 transition-transform">
+                    <h3 class="text-5xl font-extrabold mb-2">158.8K</h3>
+                    <p class="font-medium text-lg text-orange-100">Views Gained</p>
+                    <p class="text-sm text-orange-200 mt-1">(In one single video)</p>
+                </div>
+                <div class="mt-8 grid grid-cols-2 gap-4 text-sm text-gray-600">
+                    <div class="text-center p-2 bg-white/50 rounded-xl group hover:bg-white hover:shadow-md transition-all">
+                        <p class="font-bold text-black text-xl group-hover:text-green-600">3.3M</p>
+                        <p class="text-sm">Impressions</p>
+                    </div>
+                    <div class="text-center p-2 bg-white/50 rounded-xl group hover:bg-white hover:shadow-md transition-all">
+                        <p class="font-bold text-black text-xl group-hover:text-green-600">3.1%</p>
+                        <p class="text-sm">CTR</p>
+                    </div>
+                    <div class="text-center p-2 bg-white/50 rounded-xl group hover:bg-white hover:shadow-md transition-all">
+                        <p class="font-bold text-black text-xl group-hover:text-green-600">25.7K</p>
+                        <p class="text-sm">Watch Hours</p>
+                    </div>
+                    <div class="text-center p-2 bg-white/50 rounded-xl group hover:bg-white hover:shadow-md transition-all">
+                        <p class="font-bold text-black text-xl group-hover:text-green-600">+4.8K</p>
+                        <p class="text-sm">Subscribers</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Chart Panel -->
+            <div class="lg:col-span-7 bg-white rounded-[40px] p-8 shadow-lg border border-gray-100 flex flex-col">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="font-bold text-lg flex items-center gap-2">
+                        <i class="ph ph-chart-line-up text-orange-500 text-xl"></i>
+                        Video analytics
+                    </h3>
+                    <div class="flex bg-gray-100 rounded-full p-1">
+                        <button onclick="switchChart('overview')" id="btn-overview" class="px-4 py-1 rounded-full text-xs font-bold transition-all bg-white shadow text-orange-600">Overview</button>
+                        <button onclick="switchChart('reach')" id="btn-reach" class="px-4 py-1 rounded-full text-xs font-bold transition-all text-gray-500 hover:text-gray-700">Reach</button>
+                    </div>
+                </div>
+
+                <div class="relative bg-gray-50 rounded-xl overflow-hidden border border-gray-100 aspect-[16/10] lg:aspect-video">
+                    <!-- Images -->
+                    <img id="chart-img" src="https://drive.google.com/thumbnail?id=1DnxQhKy45vrnIfZtKtS9Lrre5Uu57uCT&sz=w1000" class="w-full h-full object-contain transition-opacity duration-300" alt="Chart">
+                </div>
+
+                <div class="mt-8">
+                    <div class="flex justify-between items-center mb-4">
+                        <p class="font-bold text-lg">Podcast Series:</p>
+                        <button onclick="scrollPodcasts()" class="bg-orange-100 p-2 rounded-full text-orange-600 hover:bg-orange-200 transition-colors shadow-sm">
+                            <i class="ph ph-caret-right text-lg"></i>
+                        </button>
+                    </div>
+                    <div id="podcast-scroll" class="flex gap-4 overflow-x-auto pb-4 no-scrollbar scroll-smooth">
+                        <!-- Video 1 -->
+                        <a href="https://www.youtube.com/watch?v=fbODcXBAHEY" target="_blank" class="min-w-[200px] w-[200px] space-y-2 block group flex-shrink-0">
+                            <div class="w-full aspect-video rounded-xl bg-gray-800 overflow-hidden relative shadow-md group-hover:shadow-lg transition-all">
+                                <img src="https://img.youtube.com/vi/fbODcXBAHEY/mqdefault.jpg" class="w-full h-full object-cover opacity-90 group-hover:opacity-100">
+                                <div class="absolute inset-0 flex items-center justify-center">
+                                    <div class="w-10 h-10 bg-white/90 rounded-full flex items-center justify-center shadow-lg transform scale-0 group-hover:scale-100 transition-transform">
+                                        <i class="ph ph-play-fill text-black"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="text-sm font-bold text-gray-800 line-clamp-2 group-hover:text-orange-600">【上集】房地产黑幕曝光！</p>
+                        </a>
+                        <!-- Video 2 -->
+                        <a href="https://www.youtube.com/watch?v=2u9WkPS-iJI" target="_blank" class="min-w-[200px] w-[200px] space-y-2 block group flex-shrink-0">
+                            <div class="w-full aspect-video rounded-xl bg-gray-800 overflow-hidden relative shadow-md group-hover:shadow-lg transition-all">
+                                <img src="https://img.youtube.com/vi/2u9WkPS-iJI/mqdefault.jpg" class="w-full h-full object-cover opacity-90 group-hover:opacity-100">
+                                <div class="absolute inset-0 flex items-center justify-center">
+                                    <div class="w-10 h-10 bg-white/90 rounded-full flex items-center justify-center shadow-lg transform scale-0 group-hover:scale-100 transition-transform">
+                                        <i class="ph ph-play-fill text-black"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="text-sm font-bold text-gray-800 line-clamp-2 group-hover:text-orange-600">【下集】房地产黑幕曝光！</p>
+                        </a>
+                        <!-- Video 3 -->
+                        <a href="https://www.youtube.com/watch?v=JFDXd0In6hY" target="_blank" class="min-w-[200px] w-[200px] space-y-2 block group flex-shrink-0">
+                            <div class="w-full aspect-video rounded-xl bg-gray-800 overflow-hidden relative shadow-md group-hover:shadow-lg transition-all">
+                                <img src="https://img.youtube.com/vi/JFDXd0In6hY/mqdefault.jpg" class="w-full h-full object-cover opacity-90 group-hover:opacity-100">
+                                <div class="absolute inset-0 flex items-center justify-center">
+                                    <div class="w-10 h-10 bg-white/90 rounded-full flex items-center justify-center shadow-lg transform scale-0 group-hover:scale-100 transition-transform">
+                                        <i class="ph ph-play-fill text-black"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="text-sm font-bold text-gray-800 line-clamp-2 group-hover:text-orange-600">黑幕曝光！这个“保险套路”</p>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Project 3 -->
+    <section id="project3" class="w-full max-w-7xl mx-auto px-6 py-12 mb-20 relative z-10">
+        <div class="bg-orange-500 rounded-[50px] p-8 md:p-16 text-white relative overflow-hidden">
+            <div class="flex flex-col gap-10 mb-16 relative z-10">
+                <h2 class="text-4xl md:text-5xl font-extrabold leading-tight">Project 3:<br />Short-form Video<br />AI Production</h2>
+                <div class="flex flex-col md:flex-row gap-6">
+                    <div class="bg-white/10 backdrop-blur-lg p-8 rounded-3xl border border-white/20 flex-1 md:flex-[3]">
+                        <h3 class="text-xl font-bold mb-2 flex items-center gap-2"><i class="ph ph-sparkle text-yellow-300"></i> Responsibilities</h3>
+                        <p class="text-orange-100 text-base leading-relaxed">Built a workflow using AI tools to scale YouTube Shorts production. Including Google Flow, HeyGen IV, Eleven Labs, ChatGPT, etc.</p>
+                    </div>
+                    <div class="bg-dark text-white p-8 rounded-3xl flex flex-col justify-center items-center w-full md:flex-[1] text-center border border-white/10 whitespace-nowrap">
+                        <p class="text-4xl font-bold text-orange-500 mb-1">30%</p>
+                        <p class="text-sm text-gray-400">Production Time Saved</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Phones Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 relative z-10">
+                <!-- Phone 1 -->
+                <a href="https://www.youtube.com/shorts/c-Z1T_oDusE" target="_blank" class="block relative aspect-[9/16] bg-black rounded-3xl overflow-hidden shadow-2xl border-4 border-dark group hover:-translate-y-2 transition-transform">
+                    <img src="https://drive.google.com/thumbnail?id=1UBz_4ZdGAvLTG-sfERxQarbIuRH_HiXT&sz=w800" class="w-full h-full object-cover opacity-60 group-hover:opacity-80 transition-opacity" alt="Short 1">
+                    <div class="absolute bottom-0 w-full p-4 bg-gradient-to-t from-black to-transparent">
+                        <p class="text-base font-bold leading-tight mb-4 line-clamp-3">震撼！全球首例！阿联酋航空让你用加密币买免税品！？</p>
+                    </div>
+                </a>
+                <!-- Phone 2 -->
+                <a href="https://www.youtube.com/shorts/mXd_M9mcYgc" target="_blank" class="block relative aspect-[9/16] bg-black rounded-3xl overflow-hidden shadow-2xl border-4 border-dark group hover:-translate-y-2 transition-transform">
+                    <img src="https://drive.google.com/thumbnail?id=16Q6_s27FziQduznJfC1MxciwRVEsqtPj&sz=w800" class="w-full h-full object-cover opacity-60 group-hover:opacity-80 transition-opacity" alt="Short 2">
+                    <div class="absolute bottom-0 w-full p-4 bg-gradient-to-t from-black to-transparent">
+                         <p class="text-base font-bold leading-tight mb-4 line-clamp-3">巴菲特“空仓”历史最高，他不买任何资产...</p>
+                    </div>
+                </a>
+                <!-- Phone 3 -->
+                <a href="https://www.youtube.com/shorts/xYyaHeHYq6o" target="_blank" class="block relative aspect-[9/16] bg-black rounded-3xl overflow-hidden shadow-2xl border-4 border-dark group hover:-translate-y-2 transition-transform">
+                    <img src="https://drive.google.com/thumbnail?id=1cWs2htNEvedRCGhIPg9MfUznhNsrlV2y&sz=w800" class="w-full h-full object-cover opacity-60 group-hover:opacity-80 transition-opacity" alt="Short 3">
+                    <div class="absolute bottom-0 w-full p-4 bg-gradient-to-t from-black to-transparent">
+                         <p class="text-base font-bold leading-tight mb-4 line-clamp-3">投资人请注意：比特币下一轮牛市时间曝光？</p>
+                    </div>
+                </a>
+            </div>
+             <div class="absolute -top-20 -right-20 w-96 h-96 bg-orange-400 rounded-full opacity-50 blur-3xl"></div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact" class="w-full max-w-7xl mx-auto px-6 pb-24 relative z-10">
+        <div class="flex flex-col lg:flex-row justify-between items-start gap-12 border-t-2 border-orange-100 pt-12">
+            <div class="text-center lg:text-left w-full lg:w-1/2">
+                <h2 class="text-4xl font-extrabold text-dark mb-2">micpwt</h2>
+                <p class="text-4xl md:text-5xl xl:text-6xl font-bold text-gray-400 leading-tight mb-10">Hope to Get in Touch<br />with You Soon!</p>
+                <div class="flex flex-wrap justify-center lg:justify-start gap-4">
+                    <button onclick="copyToClipboard('+601165056363')" class="group relative text-orange-500 font-bold text-lg px-4 py-2 rounded-xl border-2 border-orange-100 hover:bg-orange-50 transition-colors">
+                        <span class="flex items-center gap-2"><i class="ph ph-phone"></i> +60 11 65056363</span>
+                        <span class="absolute -top-10 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-xs px-3 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">Click to copy</span>
+                    </button>
+                    <button onclick="copyToClipboard('itsmicpwt@gmail.com')" class="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-xl font-bold shadow-lg flex items-center gap-2 transition-all active:scale-95">
+                        <i class="ph ph-envelope-simple"></i> itsmicpwt@gmail.com
+                    </button>
+                </div>
+            </div>
+            <!-- Mock Chatbox (Visual Only) -->
+            <div class="w-full lg:w-[450px] mt-4 lg:mt-0">
+                <div class="w-full h-[350px] bg-white rounded-[30px] shadow-lg border border-orange-100 flex flex-col overflow-hidden">
+                    <div class="bg-gray-900 p-4 text-white flex items-center gap-3">
+                        <div class="bg-orange-500 p-2 rounded-full"><i class="ph ph-robot text-white"></i></div>
+                        <div><h3 class="font-bold text-base">Chat with Michelle's AI</h3><p class="text-xs text-gray-400">Ask about experience & skills</p></div>
+                    </div>
+                    <div class="flex-1 bg-gray-50 p-4 flex flex-col gap-3 justify-end">
+                        <div class="self-start bg-white p-3 rounded-2xl rounded-tl-none shadow-sm border border-gray-200 text-sm max-w-[90%]">
+                            Hi! I'm Michelle's AI Assistant. Ask me anything about her experience!
+                        </div>
+                    </div>
+                    <div class="p-3 bg-white border-t border-gray-100 flex gap-2">
+                        <input type="text" placeholder="This is a demo..." disabled class="flex-1 bg-gray-100 rounded-full px-4 py-3 text-sm cursor-not-allowed">
+                        <button class="bg-orange-500 text-white p-3 rounded-full opacity-50 cursor-not-allowed"><i class="ph ph-paper-plane-right"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="text-center mt-16 text-gray-400 text-sm">© 2025 Michelle Portfolio. All rights reserved.</div>
+    </footer>
+
+    <!-- Scroll To Top -->
+    <button onclick="scrollToTop()" id="scrollTopBtn" class="fixed bottom-24 right-6 bg-orange-500 text-white p-3 rounded-full shadow-lg z-40 hover:bg-orange-600 transition-all transform translate-y-20 opacity-0">
+        <i class="ph ph-arrow-up text-xl"></i>
+    </button>
+
+    <!-- Floating Chat Button -->
+    <button class="fixed bottom-6 right-6 z-40 bg-dark text-white p-4 rounded-full shadow-lg hover:bg-gray-900 transition-colors flex items-center justify-center">
+         <i class="ph ph-chat-circle text-2xl"></i>
+    </button>
+
+    <script>
+        // Mobile Menu Toggle
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            if (menu.classList.contains('-translate-x-full')) {
+                menu.classList.remove('-translate-x-full');
+            } else {
+                menu.classList.add('-translate-x-full');
+            }
+        }
+
+        // Copy to Clipboard
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                alert('Copied: ' + text);
+            });
+        }
+
+        // Scroll to Top Visibility
+        const scrollTopBtn = document.getElementById('scrollTopBtn');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                scrollTopBtn.classList.remove('translate-y-20', 'opacity-0');
+            } else {
+                scrollTopBtn.classList.add('translate-y-20', 'opacity-0');
+            }
+        });
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Project 2 Chart Switching
+        const chartImg = document.getElementById('chart-img');
+        const btnOverview = document.getElementById('btn-overview');
+        const btnReach = document.getElementById('btn-reach');
+
+        function switchChart(type) {
+            chartImg.style.opacity = '0';
+            setTimeout(() => {
+                if (type === 'overview') {
+                    chartImg.src = "https://drive.google.com/thumbnail?id=1DnxQhKy45vrnIfZtKtS9Lrre5Uu57uCT&sz=w1000";
+                    btnOverview.classList.add('bg-white', 'shadow', 'text-orange-600');
+                    btnOverview.classList.remove('text-gray-500');
+                    btnReach.classList.remove('bg-white', 'shadow', 'text-orange-600');
+                    btnReach.classList.add('text-gray-500');
+                } else {
+                    chartImg.src = "https://drive.google.com/thumbnail?id=1-0U43TRUhbNgwql1wBSD40yS7NzM6tor&sz=w1000";
+                    btnReach.classList.add('bg-white', 'shadow', 'text-orange-600');
+                    btnReach.classList.remove('text-gray-500');
+                    btnOverview.classList.remove('bg-white', 'shadow', 'text-orange-600');
+                    btnOverview.classList.add('text-gray-500');
+                }
+                chartImg.style.opacity = '1';
+            }, 300);
+        }
+
+        // Horizontal Scroll Button for Podcasts
+        function scrollPodcasts() {
+            const container = document.getElementById('podcast-scroll');
+            container.scrollBy({ left: 200, behavior: 'smooth' });
+        }
+    </script>
+</body>
 </html>
