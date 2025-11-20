@@ -9,7 +9,7 @@ const StatCard: React.FC<StatCardProps> = ({ title, subtitle, description, icon,
     whileInView={{ opacity: 1, y: 0 }}
     transition={{ delay, duration: 0.5 }}
     viewport={{ once: true }}
-    whileHover={{ y: -10, shadow: "0px 20px 40px rgba(0,0,0,0.1)" }}
+    whileHover={{ y: -10, boxShadow: "0px 20px 40px rgba(0,0,0,0.1)" }}
     className="bg-white p-6 rounded-3xl shadow-sm border border-orange-100 flex flex-col h-full relative overflow-hidden group"
   >
     <div className="flex justify-between items-start mb-4">

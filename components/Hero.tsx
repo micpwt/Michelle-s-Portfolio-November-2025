@@ -1,15 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 
 const Hero: React.FC = () => {
-  const scrollToAchievements = () => {
-    const element = document.getElementById('achievements');
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
-
   return (
     <section id="home" className="w-full relative overflow-hidden">
       {/* Enhanced Background for Hero Section - Spans Full Width */}
@@ -58,15 +51,15 @@ const Hero: React.FC = () => {
               YouTube Growth Strategist & Media Manager. Helping channels succeed by blending Content Strategy, SEO, and AI-powered optimization.
             </p>
             
-            <motion.button 
-              onClick={scrollToAchievements}
+            <motion.a 
+              href="#achievements"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="bg-orange-500 text-white px-8 py-4 rounded-full font-bold shadow-lg shadow-orange-500/30 flex items-center gap-2 mx-auto lg:mx-0 text-lg"
+              className="bg-orange-500 text-white px-8 py-4 rounded-full font-bold shadow-lg shadow-orange-500/30 flex items-center gap-2 mx-auto lg:mx-0 text-lg cursor-pointer"
             >
               Learn More Below
               <ArrowRight size={22} />
-            </motion.button>
+            </motion.a>
           </motion.div>
 
           {/* Character / Image */}

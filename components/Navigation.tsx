@@ -15,14 +15,6 @@ const Navigation: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [phoneCopied, setPhoneCopied] = useState(false);
 
-  const scrollToSection = (id: string) => {
-    setIsOpen(false);
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
-
   const handlePhoneClick = (e: React.MouseEvent) => {
     e.preventDefault();
     navigator.clipboard.writeText('+601165056363');
@@ -83,13 +75,14 @@ const Navigation: React.FC = () => {
              </div>
              <nav className="flex flex-col gap-6 mt-8">
                {navItems.map((item) => (
-                 <button 
+                 <a 
                    key={item.name}
-                   onClick={() => scrollToSection(item.id)}
-                   className="text-3xl font-extrabold text-dark text-left hover:text-orange-500 transition-colors"
+                   href={`#${item.id}`}
+                   onClick={() => setIsOpen(false)}
+                   className="text-3xl font-extrabold text-dark text-left hover:text-orange-500 transition-colors cursor-pointer"
                  >
                    {item.name}
-                 </button>
+                 </a>
                ))}
              </nav>
              
@@ -111,13 +104,13 @@ const Navigation: React.FC = () => {
         <div className="fixed top-6 left-6 z-40">
           <nav className="flex items-center gap-8 bg-white/90 backdrop-blur-md px-8 py-4 rounded-full shadow-sm border border-orange-100">
             {navItems.map((item) => (
-              <button
+              <a
                 key={item.name}
-                onClick={() => scrollToSection(item.id)}
-                className="text-sm font-bold text-gray-600 hover:text-orange-600 transition-colors duration-300 whitespace-nowrap"
+                href={`#${item.id}`}
+                className="text-sm font-bold text-gray-600 hover:text-orange-600 transition-colors duration-300 whitespace-nowrap cursor-pointer"
               >
                 {item.name}
-              </button>
+              </a>
             ))}
           </nav>
         </div>
@@ -135,7 +128,7 @@ const Navigation: React.FC = () => {
               </span>
             </button>
             <div className="w-px bg-gray-300 h-5 self-center mx-2"></div>
-            <a href="mailto:itsmicpwt@gmail.com" className="flex items-center gap-2 hover:text-orange-600 transition-colors">
+            <a href="mailto:itsmicpwt@gmail.com" className="flex items-center gap-2 hover:text-orange-600 transition-colors cursor-pointer">
               <Mail size={16} />
               itsmicpwt@gmail.com
             </a>
